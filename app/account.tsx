@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { beginAuthenticatorSetup, confirmAuthenticator, disableAuthenticator, getAccount, getDevices, loginAccount, logoutAccount, registerAccount, revokeDevice, signOutOtherDevices, type AccountUser, type DeviceSession } from "@/services/auth";
+import { beginAuthenticatorSetup, confirmAuthenticator, disableAuthenticator, getAccount, getDevices, loginAccount, logoutAccount, registerAccount, renameDevice, revokeDevice, signOutOtherDevices, type AccountUser, type DeviceSession } from "@/services/auth";
 
 const bg = "#090B12";
 const panel = "#141722";
@@ -18,6 +18,8 @@ export default function AccountScreen() {
   const router = useRouter();
   const [user, setUser] = useState<AccountUser | null>(null);
   const [devices, setDevices] = useState<DeviceSession[]>([]);
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [renamingName, setRenamingName] = useState("");
   const [tab, setTab] = useState<"devices" | "security">("devices");
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
@@ -118,8 +120,9 @@ export default function AccountScreen() {
                 <View style={{ flex: 1 }}>
                   <Text style={styles.deviceName}>{device.name}{device.current ? " · THIS DEVICE" : ""}</Text>
                   <Text style={styles.small}>Last active {new Date(device.last_seen_at).toLocaleString()}</Text>
+                  {renamingId === device.id ? <View style={{ gap: 6, marginTop: 8 }}><TextInput value={renamingName} onChangeText={setRenamingName} placeholder="Device name" placeholderTextColor={muted} style={styles.input}/><Action label="SAVE NAME" onPress={() => run(async () => { await renameDevice(device.id, renamingName); setRenamingId(null); await refresh(); })} secondary/></View> : null}
                 </View>
-                {!device.current ? <Pressable onPress={() => run(async () => { await revokeDevice(device.id); await refresh(); })}><Text style={styles.remove}>SIGN OUT</Text></Pressable> : <Text style={styles.active}>ACTIVE</Text>}
+                <View style={{ alignItems: "flex-end", gap: 8 }}>{!device.current ? <Pressable onPress={() => run(async () => { await revokeDevice(device.id); await refresh(); })}><Text style={styles.remove}>SIGN OUT</Text></Pressable> : <Text style={styles.active}>ACTIVE</Text>}<Pressable onPress={() => { setRenamingId(device.id); setRenamingName(device.name); }}><Text style={styles.remove}>RENAME</Text></Pressable></View>
               </View>
             ))}
             {devices.length > 1 ? <Action label="SIGN OUT OF ALL OTHER DEVICES" onPress={() => run(async () => { await signOutOtherDevices(); await refresh(); })} secondary/> : null}
