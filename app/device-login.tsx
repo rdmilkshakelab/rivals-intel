@@ -30,7 +30,7 @@ export default function DeviceLoginScreen() {
             if (!cancelled) setError(problem instanceof Error ? problem.message : "Pairing failed.");
             return;
           }
-          timer = setTimeout(poll, result.interval * 1000);
+          timer = setTimeout(poll, pairingResult.interval * 1000);
         };
         timer = setTimeout(poll, result.interval * 1000);
       } catch (problem) {
