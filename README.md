@@ -51,7 +51,7 @@ Never put API keys, database credentials or encryption keys in EXPO_PUBLIC varia
 - One-time recovery codes.
 - View active devices and revoke individual sessions.
 - Sign out of all other devices.
-- TV/device QR pairing and short activation codes.
+- TV/device QR pairing and short activation codes, including an in-app camera scanner.
 
 See [docs/accounts-and-device-auth.md](docs/accounts-and-device-auth.md) for configuration, endpoints, security notes and the device-pairing sequence. Email verification, password-reset delivery and new-device alerts still need an email/notification provider and must be completed before public registration is enabled.
 
@@ -78,7 +78,7 @@ Rivals Intel is planned as one ecosystem across iPhone, iPad, Dynamic Island, Go
 - [x] TOTP authenticator setup and recovery-code backend
 - [x] Device sessions, remote revocation and sign-out-others
 - [x] QR and short-code device pairing backend
-- [x] Account, device and activation screens
+- [x] Account, device, activation and mobile QR-scanner screens
 - [ ] Install dependencies and run typecheck/build
 - [ ] Configure and test a persistent PostgreSQL instance
 - [ ] Add email verification and password reset
