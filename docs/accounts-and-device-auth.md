@@ -21,7 +21,7 @@ This is an implementation foundation, not a public account service ready for lau
 
 - Email verification and password-reset email delivery are not connected to an email provider. Registration currently signs the user in immediately. Do not open public registration until verification and recovery flows are completed.
 - New-device email/push alerts are not connected.
-- Device rename and a full TV-specific remote-control interface are not implemented.
+- A full TV-specific remote-control interface is not implemented.
 - The QR activation URL assumes the deployed web app is hosted at PUBLIC_WEB_URL and serves the Expo Router /activate route.
 - The account service has not been run against a live PostgreSQL instance, load-tested, penetration-tested or audited.
 - Production deployment still needs HTTPS, backups, database migrations, monitoring, secret rotation and a reviewed privacy policy/terms.
@@ -60,6 +60,7 @@ The server creates the initial account tables on startup. A managed migration pr
 | GET | /api/auth/me | Current account |
 | GET | /api/account/devices | List active sessions |
 | DELETE | /api/account/devices/:id | Revoke one session |
+| PATCH | /api/account/devices/:id | Rename a device session |
 | POST | /api/account/devices/sign-out-others | Revoke every other session |
 | POST | /api/account/totp/setup | Generate authenticator QR and secret |
 | POST | /api/account/totp/confirm | Verify code and enable TOTP |
