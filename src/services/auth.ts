@@ -5,18 +5,17 @@ const API_BASE = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, "");
 const TOKEN_KEY = "rivals-intel-session";
 
 async function getToken() {
-  if (Platform.OS === "web") return typeof localStorage === "undefined" ? null : localStorage.getItem(TOKEN_KEY);
+  if (Platform.OS === "web") return null; // Web sessions use the HttpOnly cookie, never localStorage.
   return SecureStore.getItemAsync(TOKEN_KEY);
 }
 async function saveToken(token: string) {
-  if (Platform.OS === "web") { if (typeof localStorage !== "undefined") localStorage.setItem(TOKEN_KEY, token); return; }
+  if (Platform.OS === "web") return;
   await SecureStore.setItemAsync(TOKEN_KEY, token);
 }
 async function clearToken() {
-  if (Platform.OS === "web") { if (typeof localStorage !== "undefined") localStorage.removeItem(TOKEN_KEY); return; }
+  if (Platform.OS === "web") return;
   await SecureStore.deleteItemAsync(TOKEN_KEY);
 }
-
 export async function authRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
   if (!API_BASE) throw new Error("Set EXPO_PUBLIC_API_BASE_URL before using Rivals Intel accounts.");
   const token = await getToken();
@@ -63,6 +62,5 @@ export async function createDeviceAuthorisation(deviceName: string) {
 export async function pollDeviceAuthorisation(deviceCode: string) {
   return authRequest<{ status: "pending" | "complete"; token?: string; expiresAt?: string }>("/api/device/poll", { method: "POST", body: JSON.stringify({ deviceCode }) });
 }
-export async function storePairedDeviceToken(token: string) { await saveToken(token); }
 export type AccountUser = { id: string; email: string; username: string; twoFactorEnabled: boolean };
 export type DeviceSession = { id: string; name: string; user_agent: string; created_at: string; last_seen_at: string; expires_at: string; current: boolean };
