@@ -126,7 +126,8 @@ export default function AccountScreen() {
               </View>
             ))}
             {devices.length > 1 ? <Action label="SIGN OUT OF ALL OTHER DEVICES" onPress={() => run(async () => { await signOutOtherDevices(); await refresh(); })} secondary/> : null}
-            <Action label="PAIR A TV OR OTHER DEVICE" onPress={() => router.push("/activate")} secondary/>
+            <Action label="SCAN TV QR CODE" onPress={() => router.push("/scan-device")} secondary/>
+            <Action label="ENTER TV DEVICE CODE" onPress={() => router.push("/activate")} secondary/>
           </View>
         ) : (
           <View style={styles.card}>
