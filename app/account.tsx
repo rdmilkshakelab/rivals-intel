@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { approveDevice, beginAuthenticatorSetup, confirmAuthenticator, getAccount, getDevices, loginAccount, logoutAccount, registerAccount, revokeDevice, signOutOtherDevices, type AccountUser, type DeviceSession } from "@/services/auth";
+import { beginAuthenticatorSetup, confirmAuthenticator, disableAuthenticator, getAccount, getDevices, loginAccount, logoutAccount, registerAccount, revokeDevice, signOutOtherDevices, type AccountUser, type DeviceSession } from "@/services/auth";
 
 const bg = "#090B12";
 const panel = "#141722";
@@ -24,6 +24,9 @@ export default function AccountScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [totpCode, setTotpCode] = useState("");
+  const [recoveryCode, setRecoveryCode] = useState("");
+  const [disablePassword, setDisablePassword] = useState("");
+  const [disableCode, setDisableCode] = useState("");
   const [qr, setQr] = useState("");
   const [secret, setSecret] = useState("");
   const [recoveryCodes, setRecoveryCodes] = useState<string[]>([]);
@@ -48,7 +51,7 @@ export default function AccountScreen() {
   async function submitAuth() {
     await run(async () => {
       if (mode === "register") await registerAccount(email, username, password);
-      else await loginAccount(email, password, { totpCode: totpCode || undefined });
+      else await loginAccount(email, password, { totpCode: totpCode || undefined, recoveryCode: recoveryCode || undefined });
       await refresh();
       setMessage("You're signed in.");
     });
@@ -84,6 +87,7 @@ export default function AccountScreen() {
             {mode === "register" ? <TextInput value={username} onChangeText={setUsername} placeholder="Username" placeholderTextColor={muted} autoCapitalize="none" style={styles.input}/> : null}
             <TextInput value={password} onChangeText={setPassword} placeholder="Password (12+ characters)" placeholderTextColor={muted} secureTextEntry style={styles.input}/>
             {mode === "login" ? <TextInput value={totpCode} onChangeText={setTotpCode} placeholder="Authenticator code (if enabled)" placeholderTextColor={muted} keyboardType="number-pad" style={styles.input}/> : null}
+            {mode === "login" ? <TextInput value={recoveryCode} onChangeText={setRecoveryCode} placeholder="Or recovery code" placeholderTextColor={muted} autoCapitalize="characters" style={styles.input}/> : null}
             <Action label={busy ? "PLEASE WAIT..." : mode === "login" ? "SIGN IN" : "CREATE ACCOUNT"} onPress={submitAuth}/>
             <Action label={mode === "login" ? "CREATE AN ACCOUNT" : "I ALREADY HAVE AN ACCOUNT"} onPress={() => setMode(mode === "login" ? "register" : "login")} secondary/>
           </View>
@@ -135,7 +139,7 @@ export default function AccountScreen() {
               <Action label="VERIFY AND ENABLE" onPress={finishAuthenticator}/>
             </> : null}
             {recoveryCodes.length ? <View style={styles.recovery}><Text style={styles.cardTitle}>Save your recovery codes</Text><Text style={styles.small}>Each code works once. Store these somewhere safe. They are shown only now.</Text>{recoveryCodes.map((code) => <Text selectable key={code} style={styles.secret}>{code}</Text>)}</View> : null}
-            {user.twoFactorEnabled ? <Text style={styles.small}>To disable your authenticator, use the account security API after confirming your password and current code. A dedicated disable form is still to be added.</Text> : null}
+            {user.twoFactorEnabled ? <View style={styles.recovery}><Text style={styles.cardTitle}>Disable authenticator</Text><TextInput value={disablePassword} onChangeText={setDisablePassword} placeholder="Account password" placeholderTextColor={muted} secureTextEntry style={styles.input}/><TextInput value={disableCode} onChangeText={setDisableCode} placeholder="Current six-digit code" placeholderTextColor={muted} keyboardType="number-pad" style={styles.input}/><Action label="DISABLE TWO-FACTOR AUTHENTICATION" onPress={() => run(async () => { await disableAuthenticator(disablePassword, disableCode); setDisablePassword(""); setDisableCode(""); setRecoveryCodes([]); await refresh(); })} secondary/></View> : null}
           </View>
         )}
         {message ? <Text style={styles.message}>{message}</Text> : null}
