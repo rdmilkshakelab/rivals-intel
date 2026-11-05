@@ -82,7 +82,8 @@ Rivals Intel is planned as one ecosystem across iPhone, iPad, Dynamic Island, Go
 - [ ] Install dependencies and run typecheck/build
 - [ ] Configure and test a persistent PostgreSQL instance
 - [ ] Add email verification and password reset
-- [ ] Add new-device alerts and device renaming
+- [x] Device renaming
+- [ ] Add new-device alerts
 - [ ] Complete production security review and deployment
 - [ ] Validate real player profiles and match history
 - [ ] Responsive desktop web dashboard
