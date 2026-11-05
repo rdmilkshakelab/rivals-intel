@@ -69,16 +69,26 @@ Never put API keys in `EXPO_PUBLIC_*` variables or commit secrets.
 
 The upstream API requires an `x-api-key` header. Check its current documentation for parameters, limits, and response formats.
 
+## Multi-platform direction
+
+Rivals Intel is planned as one ecosystem across iPhone, iPad, Dynamic Island, Google TV, Mac and Windows. The existing Expo + React Native app remains the starting point for iPhone and iPad; native platform integrations will be added only where required. See [docs/platform-architecture.md](docs/platform-architecture.md) for the shared architecture, platform responsibilities and phased delivery plan.
+
 ## Roadmap
 
 - [x] Initial mobile app shell and dark dashboard
-- [x] Demo player profile and match history
+- [x] Demo player profile and sample match history
 - [x] Server-side API-key proxy foundation
-- [ ] Connect and normalise live player profile responses
+- [x] Multi-platform architecture and phased delivery plan
+- [ ] Install, typecheck and run the existing app
+- [ ] Connect and validate a real player profile
+- [ ] Connect and normalise live player match history
 - [ ] Hero statistics and filters
-- [ ] Match-history detail screen
-- [ ] Overwolf Windows companion prototype
+- [ ] Responsive iPhone and iPad layouts
+- [ ] Desktop-width web dashboard, then evaluate Mac packaging
+- [ ] Overwolf Windows companion prototype, subject to current policy review
 - [ ] Secure live-session pairing between desktop and mobile
+- [ ] iOS Live Activity / Dynamic Island prototype using permitted data only
+- [ ] Google TV remote-first proof of concept
 - [ ] Console-friendly post-match workflow, if a supported data source exists
 
 ## Disclaimer
