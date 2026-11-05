@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "Rivals Intel",
+    "slug": "rivals-intel",
+    "scheme": "rivalsintel",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "android": {
+      "package": "com.rdmilkeshakelab.rivalsintel"
+    },
+    "ios": {
+      "bundleIdentifier": "com.rdmilkeshakelab.rivalsintel"
+    }
+  }
+}
