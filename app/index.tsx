@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 import { fetchPlayer } from "@/services/api";
 import { demoPlayer, demoMatches, type PlayerSummary } from "@/services/demo";
 import { colors } from "@/theme/colors";
@@ -24,6 +25,7 @@ function Stat({ label, value, accent = false }: { label: string; value: string; 
 }
 
 export default function HomeScreen() {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [player, setPlayer] = useState<PlayerSummary>(demoPlayer);
   const [loading, setLoading] = useState(false);
@@ -57,7 +59,7 @@ export default function HomeScreen() {
             <Text style={styles.eyebrow}>MARVEL RIVALS COMPANION</Text>
             <Text style={styles.brand}>RIVALS <Text style={styles.brandAccent}>INTEL</Text></Text>
           </View>
-          <View style={styles.statusPill}><View style={styles.statusDot} /><Text style={styles.statusText}>BETA</Text></View>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}><Pressable onPress={() => router.push("/account")} style={styles.statusPill}><Text style={styles.statusText}>ACCOUNT</Text></Pressable><View style={styles.statusPill}><View style={styles.statusDot} /><Text style={styles.statusText}>BETA</Text></View></View>
         </View>
 
         <View style={styles.searchRow}>
