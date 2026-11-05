@@ -44,6 +44,9 @@ export async function getDevices() { return authRequest<{ devices: DeviceSession
 export async function revokeDevice(id: string) {
   return authRequest<{ ok: boolean }>("/api/account/devices/" + encodeURIComponent(id), { method: "DELETE" });
 }
+export async function renameDevice(id: string, name: string) {
+  return authRequest<{ ok: boolean }>("/api/account/devices/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify({ name }) });
+}
 export async function signOutOtherDevices() { return authRequest<{ ok: boolean }>("/api/account/devices/sign-out-others", { method: "POST" }); }
 export async function beginAuthenticatorSetup() {
   return authRequest<{ secret: string; otpauthUri: string; qrCodeDataUrl: string }>("/api/account/totp/setup", { method: "POST" });
