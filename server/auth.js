@@ -105,6 +105,7 @@ function userCode() {
 
 export async function initialiseAuth() {
   if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required to enable accounts.");
+  keyForEncryption();
   await pool.query(
     "CREATE TABLE IF NOT EXISTS ri_users (" +
     "id UUID PRIMARY KEY DEFAULT gen_random_uuid(), email TEXT NOT NULL UNIQUE, username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL, " +
@@ -163,7 +164,9 @@ export function registerAuthRoutes(app) {
       if (password.length < 12 || password.length > 128) return res.status(400).json({ error: "Password must be at least 12 characters." });
       const result = await pool.query("INSERT INTO ri_users (email,username,password_hash) VALUES ($1,$2,$3) RETURNING id,email,username", [email, username, await passwordHash(password)]);
       const token = await createSession(result.rows[0].id, req, res, req.body.deviceName);
-      res.status(201).json({ user: result.rows[0], token, note: "Email verification must be enabled before public launch." });
+      const response = { user: result.rows[0], note: "Email verification must be enabled before public launch." };
+      if (req.headers["x-ri-client"] === "native") response.token = token;
+      res.status(201).json(response);
     } catch (error) {
       if (error.code === "23505") return res.status(409).json({ error: "That email address or username is already registered." });
       next(error);
@@ -185,7 +188,9 @@ export function registerAuthRoutes(app) {
         if (!valid) return res.status(401).json({ error: "A valid authenticator or unused recovery code is required.", requiresTwoFactor: true });
       }
       const token = await createSession(user.id, req, res, req.body.deviceName);
-      res.json({ user: { id: user.id, email: user.email, username: user.username, twoFactorEnabled: user.totp_enabled }, token });
+      const response = { user: { id: user.id, email: user.email, username: user.username, twoFactorEnabled: user.totp_enabled } };
+      if (req.headers["x-ri-client"] === "native") response.token = token;
+      res.json(response);
     } catch (error) { next(error); }
   });
 
@@ -263,6 +268,7 @@ export function registerAuthRoutes(app) {
 
   app.post("/api/device/authorise", async (req, res, next) => {
     try {
+      await pool.query("DELETE FROM ri_device_codes WHERE expires_at < NOW() - INTERVAL '1 day'");
       const device = randomToken(32);
       const code = userCode();
       const expires = new Date(Date.now() + DEVICE_CODE_MINUTES * 60000);
