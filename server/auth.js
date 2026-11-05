@@ -218,6 +218,16 @@ export function registerAuthRoutes(app) {
       res.json({ ok: true });
     } catch (error) { next(error); }
   });
+  app.patch("/api/account/devices/:id", requireAccount, async (req, res, next) => {
+    try {
+      const name = String(req.body.name || "").trim().slice(0, 40);
+      if (!name) return res.status(400).json({ error: "Enter a device name." });
+      const result = await pool.query("UPDATE ri_sessions SET device_name=$1 WHERE id=$2 AND user_id=$3 AND revoked_at IS NULL RETURNING id,device_name", [name, req.params.id, req.account.user_id]);
+      if (!result.rowCount) return res.status(404).json({ error: "Device session not found." });
+      res.json({ ok: true, device: result.rows[0] });
+    } catch (error) { next(error); }
+  });
+
   app.post("/api/account/devices/sign-out-others", requireAccount, async (req, res, next) => {
     try {
       await pool.query("UPDATE ri_sessions SET revoked_at=NOW() WHERE user_id=$1 AND id<>$2 AND revoked_at IS NULL", [req.account.user_id, req.account.session_id]);
