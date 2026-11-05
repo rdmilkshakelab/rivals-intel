@@ -117,7 +117,7 @@ export default function HomeScreen() {
 
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionEyebrow}>RECENT ACTIVITY</Text>
-          <Text style={styles.sectionTitle}>Match history</Text>
+          <Text style={styles.sectionTitle}>Sample match history</Text>
         </View>
         <View style={styles.matchList}>
           {demoMatches.map((match) => (
