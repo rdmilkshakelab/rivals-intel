@@ -12,6 +12,7 @@ The account foundation is shared by the Expo mobile app and Expo web build.
 - TOTP authenticator enrollment produces a standard otpauth URI and QR code. It works with Google Authenticator, Microsoft Authenticator and other compatible apps.
 - TOTP secrets are encrypted at rest with AES-256-GCM using AUTH_ENCRYPTION_KEY.
 - Ten one-time recovery codes are generated on enrollment; only hashes are stored.
+- The mobile app includes an in-app QR scanner, and the web activation page accepts a short code.
 - TV/device authorisation creates a random device secret plus a short user code. The TV polls with its private device secret. A signed-in user approves the short code, and the server returns a new session token once.
 - Account and device endpoints have basic IP-based rate limiting.
 
@@ -21,7 +22,7 @@ This is an implementation foundation, not a public account service ready for lau
 
 - Email verification and password-reset email delivery are not connected to an email provider. Registration currently signs the user in immediately. Do not open public registration until verification and recovery flows are completed.
 - New-device email/push alerts are not connected.
-- A full TV-specific remote-control interface is not implemented.
+- The device-login screen is a cross-platform proof of concept; a packaged Android TV app and remote-first navigation still need a dedicated build.
 - The QR activation URL assumes the deployed web app is hosted at PUBLIC_WEB_URL and serves the Expo Router /activate route.
 - The account service has not been run against a live PostgreSQL instance, load-tested, penetration-tested or audited.
 - Production deployment still needs HTTPS, backups, database migrations, monitoring, secret rotation and a reviewed privacy policy/terms.
