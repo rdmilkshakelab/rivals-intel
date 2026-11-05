@@ -284,7 +284,8 @@ export function registerAuthRoutes(app) {
       const code = userCode();
       const expires = new Date(Date.now() + DEVICE_CODE_MINUTES * 60000);
       await pool.query("INSERT INTO ri_device_codes (device_code_hash,user_code,device_name,expires_at) VALUES ($1,$2,$3,$4)", [sha256(device), code, labelDevice(req, req.body.deviceName), expires]);
-      const verificationUri = (process.env.PUBLIC_WEB_URL || "https://rivalsintel.com") + "/activate?code=" + encodeURIComponent(code);
+      if (!process.env.PUBLIC_WEB_URL) return res.status(503).json({ error: "PUBLIC_WEB_URL must be configured before device QR pairing can be used." });
+      const verificationUri = process.env.PUBLIC_WEB_URL.replace(/\/$/, "") + "/activate?code=" + encodeURIComponent(code);
       const qrCodeDataUrl = await QRCode.toDataURL(verificationUri, { errorCorrectionLevel: "M", margin: 2, width: 260 });
       res.status(201).json({ deviceCode: device, userCode: code, verificationUri, qrCodeDataUrl, expiresIn: DEVICE_CODE_MINUTES * 60, interval: 5 });
     } catch (error) { next(error); }
