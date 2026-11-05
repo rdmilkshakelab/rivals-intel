@@ -7,7 +7,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
-    "plugins": ["expo-router"],
+    "plugins": ["expo-router", ["expo-camera", { "cameraPermission": "Allow Rivals Intel to scan device sign-in QR codes." }]],
     "experiments": {
       "typedRoutes": true
     },
