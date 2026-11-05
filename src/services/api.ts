@@ -16,6 +16,8 @@ type RawPlayerResponse = {
   overall_stats?: {
     total_matches?: number;
     total_wins?: number;
+    total_kills?: number;
+    total_deaths?: number;
     ranked?: { total_matches?: number; total_wins?: number; total_kills?: number; total_deaths?: number };
   };
   heroes_ranked?: RawHero[];
