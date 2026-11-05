@@ -1,24 +1,24 @@
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { approveDevice, getAccount } from "@/services/auth";
 
 export default function ActivateScreen() {
   const router = useRouter();
-  const [code, setCode] = useState("");
-  const [message, setMessage] = useState("Sign in first, then enter the code shown on your TV or other device.");
+  const params = useLocalSearchParams<{ code?: string }>();
+  const [code, setCode] = useState(String(params.code || ""));
+  const [message, setMessage] = useState("Sign in first, then approve the code shown on your TV or other device.");
   const [busy, setBusy] = useState(false);
   async function approve() {
     setBusy(true);
     try {
       await getAccount();
       const result = await approveDevice(code.trim().toUpperCase());
-      setMessage(\`Approved \${result.deviceName}. You can return to your device now.\`);
+      setMessage("Approved " + result.deviceName + ". You can return to your device now.");
       setCode("");
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Could not approve this device.");
-    } finally { setBusy(false); }
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Could not approve this device."); }
+    finally { setBusy(false); }
   }
   return (
     <SafeAreaView style={styles.safe}>
