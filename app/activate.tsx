@@ -32,6 +32,7 @@ export default function ActivateScreen() {
           <Pressable disabled={busy || code.replace(/-/g, "").length !== 8} onPress={approve} style={styles.button}><Text style={styles.buttonText}>{busy ? "CHECKING..." : "APPROVE DEVICE"}</Text></Pressable>
         </View>
         <Text style={styles.copy}>{message}</Text>
+        <Pressable onPress={() => router.push("/account")} style={styles.button}><Text style={styles.buttonText}>GO TO ACCOUNT SIGN IN</Text></Pressable>
       </ScrollView>
     </SafeAreaView>
   );
