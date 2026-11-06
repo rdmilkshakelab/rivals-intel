@@ -11,6 +11,7 @@ on:
       - "package.json"
       - "app.json"
       - ".github/workflows/android-build.yml"
+      - ".github/workflows/ios-build.yml"
 
 jobs:
   mobile:
