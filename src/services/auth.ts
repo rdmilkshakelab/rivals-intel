@@ -3,7 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import { createClient, type User } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL || "https://yqoyksfsiqmnjnnbrzun.supabase.co";
-const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ5cW95a3Nmc2lxbW5qbm5icnp1biIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzkzOTk1MTUzLCJleHAiOjIxMDk1NzExNTN9.YTvzjjv0zGeqJKROFfnmZ7nmXMMnSfI_wxdobd2BbT0";
+const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ5cW95a3Nmc2lxbW5qbm5icnp1biIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzkzOTk1MTUzLCJleHAiOjIxMDk1NzExNTN9.YTvzjjv0zGeqJKROFfnmZ7nmXMMnSfI_wxdobd2BbT0";
 const API_BASE = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, "");
 
 const secureStorage = {
