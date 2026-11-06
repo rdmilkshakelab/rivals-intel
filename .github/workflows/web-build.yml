@@ -1,0 +1,34 @@
+name: Build Rivals Intel Web
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "src/**"
+      - "assets/**"
+      - "package.json"
+      - "app.json"
+      - "tsconfig.json"
+      - ".github/workflows/web-build.yml"
+
+jobs:
+  web:
+    name: Export responsive web app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm install
+      - run: npm run typecheck
+      - name: Export static web app
+        run: npm run build:web
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rivals-intel-web
+          path: dist/
+          if-no-files-found: error
