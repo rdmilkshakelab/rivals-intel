@@ -7,7 +7,7 @@ A multi-platform Marvel Rivals companion for player profiles, career statistics,
 ## Project direction
 
 - **Mobile and web:** Expo + React Native + TypeScript, with a responsive web build.
-- **Accounts:** shared Express API with PostgreSQL-backed users and sessions.
+- **Accounts:** Supabase Auth integration is being prepared for web and cross-device sign-in; the existing Express/PostgreSQL account API remains the current pairing backend until migration is complete.
 - **Security:** scrypt password hashing, optional TOTP authenticator apps, recovery codes and device session management.
 - **Device pairing:** short-lived QR/device-code flow for TV and other shared-screen devices.
 - **Stats provider:** [MarvelRivalsAPI](https://docs.marvelrivalsapi.com/) for player profiles, hero data and match history. This is an unofficial API and may change.
@@ -69,6 +69,12 @@ See [docs/accounts-and-device-auth.md](docs/accounts-and-device-auth.md) for con
 
 The upstream stats API requires an x-api-key header. Check its current documentation for parameters, limits and response formats.
 
+## Windows desktop build
+
+A Windows desktop shell is included under `apps/windows`. It opens the hosted Rivals Intel web application in a secured Electron window. The `Build Rivals Intel Windows` workflow creates a Windows installer when files in `apps/windows` change. The installer is not a live game-process reader and does not access game memory.
+
+See [docs/supabase-setup.md](docs/supabase-setup.md) for the Supabase account foundation and required project configuration.
+
 ## Multi-platform direction
 
 Rivals Intel is planned as one ecosystem across iPhone, iPad, Dynamic Island, Google TV, Mac and Windows. See docs/platform-architecture.md for shared architecture, platform responsibilities and phased delivery.
@@ -97,7 +103,10 @@ Rivals Intel is planned as one ecosystem across iPhone, iPad, Dynamic Island, Go
 - [ ] Configure the production API origin and verify account sign-in on the hosted site
 - [ ] Overwolf Windows companion prototype, subject to current policy review
 - [ ] iOS Live Activity / Dynamic Island prototype using permitted data only
-- [ ] Google TV remote-first app build
+- [x] Android TV native app foundation and remote-first player lookup screen
+- [ ] Configure production API URL and validate Android TV sign-in on hardware
+- [x] Windows desktop wrapper and installer workflow
+- [ ] Configure Supabase Auth and complete web account integration
 
 ## Disclaimer
 
