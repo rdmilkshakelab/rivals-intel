@@ -30,6 +30,10 @@ npx expo start
 
 Use Expo Go to scan the QR code, or press w to run the web preview. The web app is automatically built and deployed to GitHub Pages whenever web source files change. Once Pages is enabled for the repository, visit https://rdmilkshakelab.github.io/rivals-intel/. For a local static export, run `npm run build:web`; the finished site is written to `dist/`. The dashboard uses sample data until a backend URL is configured.
 
+## Lording the Roster challenge tracker
+
+A browser-based YouTube challenge tracker is included at `public/lording-the-roster/index.html`. Once GitHub Pages finishes deploying, open https://rdmilkshakelab.github.io/rivals-intel/lording-the-roster/. It includes all 54 heroes, role and status filters, Lord completion progress, episode and notes fields, plus JSON backup/restore. Progress is stored in the current browser using local storage, so it does not automatically sync between devices or browsers. The tracker starts with the previously confirmed Lord heroes and current in-progress projects.
+
 ## Run the API
 
 ~~~bash
