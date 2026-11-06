@@ -111,7 +111,7 @@ export async function beginAuthenticatorSetup() {
 export async function confirmAuthenticator(code: string) {
   const { data: factors, error: listError } = await supabase.auth.mfa.listFactors();
   if (listError) throw listError;
-  const factor = factors.totp.find((item) => item.status === "unverified");
+  const factor = factors.all.find((item) => String(item.status) === "unverified" && item.factor_type === "totp");
   if (!factor) throw new Error("Start authenticator setup again to generate a new QR code.");
   const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({ factorId: factor.id });
   if (challengeError) throw challengeError;
