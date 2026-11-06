@@ -95,11 +95,13 @@ The repository now contains more than the original dashboard starter:
 - Express API with PostgreSQL account/session tables, TOTP support, device pairing and the server-side stats API proxy.
 - The latest GitHub Actions run passes app TypeScript typechecking and server JavaScript syntax checks. CI does not yet build Expo targets or exercise the database/auth flows.
 
+The latest CI install also reported five moderate npm advisories; inspect them with `npm audit`, fix them deliberately and commit lockfiles so installs are reproducible. Do not use a blanket force-upgrade without reviewing breaking changes.
+
 The account and pairing code is a foundation, not a production-ready identity service. Email verification, password reset, new-device alerts, a live PostgreSQL deployment, automated auth tests, security review and deployment configuration remain outstanding. The dashboard still uses sample match history. The repository has no completed iOS Live Activity, Google TV package, native Mac app or Windows Overwolf companion.
 
 ### Immediate priority
 
-1. Keep the current Expo app as the only mobile codebase. The CI typecheck now passes; next launch the app in Codespaces and verify the screens on a phone before adding native targets.
+1. Keep the existing Expo app as the only mobile codebase; do not fork separate mobile apps yet.
 2. Run the app in Codespaces and confirm the dashboard, account routes and QR scanner render on a real phone.
 3. Start the API and verify `/health`; then configure PostgreSQL privately and smoke-test registration, TOTP, sessions and device pairing.
 4. Connect and inspect real player and match-history responses before removing sample labels.

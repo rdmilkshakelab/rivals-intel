@@ -85,6 +85,7 @@ Rivals Intel is planned as one ecosystem across iPhone, iPad, Dynamic Island, Go
 - [ ] Add email verification and password reset
 - [x] Device renaming
 - [ ] Add new-device alerts
+- [ ] Review npm audit advisories and add reproducible npm lockfiles
 - [ ] Complete production security review and deployment
 - [ ] Validate real player profiles and match history
 - [ ] Responsive desktop web dashboard
