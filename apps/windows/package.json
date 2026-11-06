@@ -1,0 +1,23 @@
+{
+  "name": "rivals-intel-windows",
+  "version": "0.1.0",
+  "description": "Rivals Intel desktop companion",
+  "main": "main.cjs",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^40.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.rivalsintel.desktop",
+    "productName": "Rivals Intel",
+    "directories": { "output": "dist" },
+    "files": ["main.cjs", "preload.cjs", "assets/**/*"],
+    "win": { "target": ["nsis"], "artifactName": "Rivals-Intel-Setup-${version}.${ext}" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "createStartMenuShortcut": true }
+  }
+}
