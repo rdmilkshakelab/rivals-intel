@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { WebNav } from "@/components/WebNav";
 import { beginAuthenticatorSetup, confirmAuthenticator, disableAuthenticator, getAccount, getDevices, loginAccount, logoutAccount, registerAccount, renameDevice, revokeDevice, signOutOtherDevices, type AccountUser, type DeviceSession } from "@/services/auth";
 
 const bg = "#090B12";
