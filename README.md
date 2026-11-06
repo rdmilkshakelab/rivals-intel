@@ -10,7 +10,7 @@ A multi-platform Marvel Rivals companion for player profiles, career statistics,
 - **Accounts:** Supabase Auth integration is being prepared for web and cross-device sign-in; the existing Express/PostgreSQL account API remains the current pairing backend until migration is complete.
 - **Security:** scrypt password hashing, optional TOTP authenticator apps, recovery codes and device session management.
 - **Device pairing:** short-lived QR/device-code flow for TV and other shared-screen devices.
-- **Stats provider:** [MarvelRivalsAPI](https://docs.marvelrivalsapi.com/) for player profiles, hero data and match history. This is an unofficial API and may change.
+- **Stats provider:** a switchable server-side adapter. `mrivals` currently supplies public Tracker Network profiles, lifetime overview, hero/role analytics and peak rank while MarvelRivalsAPI is unavailable. Switch `STATS_PROVIDER` back to `marvelrivalsapi` when it returns.
 - **Live PC companion:** future Overwolf desktop app using the [Marvel Rivals Game Events Provider](https://dev.overwolf.com/ow-electron/live-game-data-gep/supported-games/marvel-rivals/).
 
 ## Important live-data limitation
@@ -67,7 +67,7 @@ See [docs/accounts-and-device-auth.md](docs/accounts-and-device-auth.md) for con
 - GET /api/heroes
 - Account and device routes documented in docs/accounts-and-device-auth.md.
 
-The upstream stats API requires an x-api-key header. Check its current documentation for parameters, limits and response formats.
+The active stats source is configured with `STATS_PROVIDER` in `server/.env`. See [docs/api-integration.md](docs/api-integration.md) for switching providers and feature differences. The MarvelRivalsAPI key is required only when that provider is selected.
 
 ## Windows desktop build
 
