@@ -11,6 +11,8 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.EditText
+import android.widget.Button
 import android.widget.ImageView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
@@ -147,14 +149,86 @@ class MainActivity : Activity() {
         }
     }
 
+    private lateinit var playerInput: EditText
+    private lateinit var resultPanel: TextView
+
     private fun showDashboard() {
-        root.removeAllViews()
-        root.addView(label("RIVALS INTEL", 20f, purple, true))
-        root.addView(label("TV LINKED", 34f, white, true))
-        root.addView(label("Your TV is now connected to your account.", 18f, muted))
-        root.addView(label("PLAYER DASHBOARD", 18f, purple, true))
-        root.addView(label("Player profiles, hero performance and match history will appear here as the TV dashboard is connected to your stats service.", 17f, white))
-        root.addView(label("Use your phone or computer to manage this device.", 14f, muted))
+        root = baseLayout()
+        root.gravity = Gravity.TOP
+        root.addView(label("RIVALS INTEL", 18f, purple, true))
+        root.addView(label("PLAYER INTELLIGENCE", 30f, white, true))
+        root.addView(label("Your TV is securely linked. Search a Marvel Rivals player to view their available profile data and completed match history.", 15f, muted))
+        playerInput = EditText(this).apply {
+            hint = "Enter in-game player name or UID"
+            setHintTextColor(muted)
+            setTextColor(white)
+            textSize = 18f
+            singleLine = true
+            setPadding(18, 14, 18, 14)
+            isFocusable = true
+            isFocusableInTouchMode = true
+        }
+        root.addView(playerInput, LinearLayout.LayoutParams(-1, -2).apply { topMargin = 22 })
+        val actions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER; setPadding(0, 10, 0, 10) }
+        val search = Button(this).apply {
+            text = "SEARCH PLAYER"
+            isFocusable = true
+            setOnClickListener { loadPlayer(false) }
+        }
+        val history = Button(this).apply {
+            text = "MATCH HISTORY"
+            isFocusable = true
+            setOnClickListener { loadPlayer(true) }
+        }
+        actions.addView(search)
+        actions.addView(history)
+        root.addView(actions)
+        resultPanel = label("Enter a player name above to get started.", 15f, muted)
+        resultPanel.gravity = Gravity.TOP or Gravity.START
+        root.addView(ScrollView(this).apply {
+            isFillViewport = true
+            addView(resultPanel)
+        }, LinearLayout.LayoutParams(-1, 0, 1f))
+        root.addView(label("Only public profile data and completed match history are requested. No live match telemetry or game-process access.", 11f, muted))
+        setContentView(root)
+        playerInput.requestFocus()
+    }
+
+    private fun loadPlayer(history: Boolean) {
+        val query = playerInput.text.toString().trim()
+        if (query.isEmpty()) {
+            Toast.makeText(this, "Enter a player name or UID first.", Toast.LENGTH_SHORT).show()
+            playerInput.requestFocus()
+            return
+        }
+        resultPanel.text = if (history) "Loading completed match history…" else "Loading player profile…"
+        io.execute {
+            try {
+                val encoded = java.net.URLEncoder.encode(query, "UTF-8")
+                val path = if (history) "/api/player/$encoded/match-history" else "/api/player/$encoded"
+                val result = requestGet(path)
+                val pretty = result.toString(2)
+                runOnUiThread { resultPanel.text = pretty.take(6500) }
+            } catch (e: Exception) {
+                runOnUiThread { resultPanel.text = "Couldn't load this data. Check the API connection and player name.\n\n" + (e.message ?: "Unknown error") }
+            }
+        }
+    }
+
+    private fun requestGet(path: String): JSONObject {
+        val prefs = getSharedPreferences("rivals-intel-secure", MODE_PRIVATE)
+        val connection = (URL(BuildConfig.API_BASE_URL.trimEnd('/') + path).openConnection() as HttpURLConnection)
+        connection.requestMethod = "GET"
+        connection.connectTimeout = 12000
+        connection.readTimeout = 15000
+        connection.setRequestProperty("Accept", "application/json")
+        connection.setRequestProperty("Authorization", "Bearer " + (prefs.getString("session_token", "") ?: ""))
+        val code = connection.responseCode
+        val stream = if (code in 200..299) connection.inputStream else connection.errorStream
+        val response = stream.bufferedReader().use { it.readText() }
+        connection.disconnect()
+        if (code !in 200..299) throw IllegalStateException(response)
+        return JSONObject(response)
     }
 
     private fun request(path: String, body: JSONObject): JSONObject {
