@@ -23,9 +23,9 @@ export default function DeviceLoginScreen() {
           if (cancelled) return;
           if (Date.now() >= deadline) { setStatus("This code expired. Start again to get a new one."); return; }
           try {
-            const result = await pollDeviceAuthorisation(result.deviceCode);
+            const pollResult = await pollDeviceAuthorisation(result.deviceCode);
             if (cancelled) return;
-            if (result.status === "complete") { setStatus("This device is now linked to your Rivals Intel account."); return; }
+            if (pollResult.status === "complete") { setStatus("This device is now linked to your Rivals Intel account."); return; }
           } catch (problem) {
             if (!cancelled) setError(problem instanceof Error ? problem.message : "Pairing failed.");
             return;
