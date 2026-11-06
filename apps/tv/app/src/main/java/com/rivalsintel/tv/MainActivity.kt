@@ -125,18 +125,26 @@ class MainActivity : Activity() {
     }
 
     private fun poll() {
-        if (stopped || deviceCode.isEmpty()) return
-        try {
-            val result = request("/api/device/poll", JSONObject().put("deviceCode", deviceCode))
-            if (result.optString("status") == "complete") {
-                val token = result.optString("token")
-                val masterKey = MasterKey.Builder(this).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()\n                val securePrefs = EncryptedSharedPreferences.create(this, "rivals-intel-secure", masterKey, EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM)\n                securePrefs.edit().putString("session_token", token).apply()
-                runOnUiThread { showDashboard() }
-                return
-            }
-        } catch (_: Exception) { }
-        Thread.sleep(pollDelay)
-        poll()
+        while (!stopped && deviceCode.isNotEmpty()) {
+            try {
+                val result = request("/api/device/poll", JSONObject().put("deviceCode", deviceCode))
+                if (result.optString("status") == "complete") {
+                    val token = result.optString("token")
+                    val masterKey = MasterKey.Builder(this).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+                    val securePrefs = EncryptedSharedPreferences.create(
+                        this,
+                        "rivals-intel-secure",
+                        masterKey,
+                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                    )
+                    securePrefs.edit().putString("session_token", token).apply()
+                    runOnUiThread { showDashboard() }
+                    return
+                }
+            } catch (_: Exception) { }
+            try { Thread.sleep(pollDelay) } catch (_: InterruptedException) { return }
+        }
     }
 
     private fun showDashboard() {
@@ -156,7 +164,8 @@ class MainActivity : Activity() {
         connection.readTimeout = 12000
         connection.doOutput = true
         connection.setRequestProperty("Content-Type", "application/json")
-        connection.setRequestProperty("Accept", "application/json")\n        connection.setRequestProperty("X-RI-Client", "native")
+        connection.setRequestProperty("Accept", "application/json")
+        connection.setRequestProperty("X-RI-Client", "native")
         OutputStreamWriter(connection.outputStream).use { it.write(body.toString()) }
         val stream = if (connection.responseCode in 200..299) connection.inputStream else connection.errorStream
         val response = stream.bufferedReader().use { it.readText() }
