@@ -12,6 +12,8 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ImageView
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import android.widget.ScrollView
 import android.widget.Toast
 import org.json.JSONObject
@@ -128,7 +130,7 @@ class MainActivity : Activity() {
             val result = request("/api/device/poll", JSONObject().put("deviceCode", deviceCode))
             if (result.optString("status") == "complete") {
                 val token = result.optString("token")
-                getSharedPreferences("rivals-intel", MODE_PRIVATE).edit().putString("session_token", token).apply()
+                val masterKey = MasterKey.Builder(this).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()\n                val securePrefs = EncryptedSharedPreferences.create(this, "rivals-intel-secure", masterKey, EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM)\n                securePrefs.edit().putString("session_token", token).apply()
                 runOnUiThread { showDashboard() }
                 return
             }
@@ -154,7 +156,7 @@ class MainActivity : Activity() {
         connection.readTimeout = 12000
         connection.doOutput = true
         connection.setRequestProperty("Content-Type", "application/json")
-        connection.setRequestProperty("Accept", "application/json")
+        connection.setRequestProperty("Accept", "application/json")\n        connection.setRequestProperty("X-RI-Client", "native")
         OutputStreamWriter(connection.outputStream).use { it.write(body.toString()) }
         val stream = if (connection.responseCode in 200..299) connection.inputStream else connection.errorStream
         val response = stream.bufferedReader().use { it.readText() }
