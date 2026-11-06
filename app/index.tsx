@@ -50,7 +50,7 @@ export default function HomeScreen() {
       setPlayer(result);
       setNotice("Profile loaded from the configured stats service.");
     } catch {
-      setNotice("Couldn't load that profile. Check the API proxy and player name. Demo data is still available.");
+      setNotice("We couldn't load that public profile. Check the username and try again.");
     } finally {
       setLoading(false);
     }
@@ -143,9 +143,6 @@ export default function HomeScreen() {
               <Text style={styles.matchMeta}>The current stats provider does not expose recent match results.</Text>
             </View>
           </View>
-        </View>
-            </View>
-          ))}
         </View>
 
         <View style={styles.liveCard}>
