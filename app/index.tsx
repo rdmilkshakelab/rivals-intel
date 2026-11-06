@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useWindowDimensions } from "react-native";
 import {
   ActivityIndicator,
   Pressable,
@@ -26,6 +27,8 @@ function Stat({ label, value, accent = false }: { label: string; value: string; 
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isWide = width >= 900;
   const [query, setQuery] = useState("");
   const [player, setPlayer] = useState<PlayerSummary>(demoPlayer);
   const [loading, setLoading] = useState(false);
@@ -53,7 +56,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={[styles.content, isWide && styles.contentWide]} showsVerticalScrollIndicator={false}>
         <View style={styles.topline}>
           <View>
             <Text style={styles.eyebrow}>MARVEL RIVALS COMPANION</Text>
@@ -79,7 +82,7 @@ export default function HomeScreen() {
         </View>
         {notice ? <Text style={styles.notice}>{notice}</Text> : null}
 
-        <View style={styles.sectionHeader}>
+        <View style={[styles.sectionHeader, isWide && styles.sectionHeaderWide]}>
           <Text style={styles.sectionEyebrow}>PLAYER OVERVIEW</Text>
           <Text style={styles.sectionTitle}>Your battlefield record</Text>
         </View>
@@ -106,7 +109,7 @@ export default function HomeScreen() {
           <Text style={styles.sectionEyebrow}>HERO SPOTLIGHT</Text>
           <Text style={styles.sectionTitle}>Your top picks</Text>
         </View>
-        <View style={styles.heroRow}>
+        <View style={[styles.heroRow, isWide && styles.heroRowWide]}>
           {player.heroes.map((hero, index) => (
             <View key={hero.name} style={styles.heroCard}>
               <View style={[styles.heroIcon, index === 0 ? styles.heroIconHot : null]}><Text style={styles.heroInitial}>{hero.name.slice(0, 1)}</Text></View>
@@ -150,7 +153,8 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
-  content: { padding: 20, paddingBottom: 42, gap: 18 },
+  content: { padding: 20, paddingBottom: 42, gap: 18, width: "100%", alignSelf: "center" },
+  contentWide: { maxWidth: 1180, paddingHorizontal: 34, paddingTop: 34, paddingBottom: 64, gap: 22 },
   topline: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 8 },
   eyebrow: { color: colors.muted, fontSize: 9, letterSpacing: 2.2, fontWeight: "800" },
   brand: { color: colors.text, fontSize: 25, fontWeight: "900", letterSpacing: 1.4, marginTop: 4 },
@@ -164,6 +168,7 @@ const styles = StyleSheet.create({
   searchButtonText: { color: "#fff", fontSize: 10, fontWeight: "900", letterSpacing: 0.7 },
   notice: { color: colors.muted, fontSize: 11, lineHeight: 16, marginTop: -10 },
   sectionHeader: { gap: 4, marginTop: 8 },
+  sectionHeaderWide: { marginTop: 14 },
   sectionEyebrow: { color: colors.accent, fontSize: 9, fontWeight: "900", letterSpacing: 1.8 },
   sectionTitle: { color: colors.text, fontSize: 20, fontWeight: "800", letterSpacing: -0.4 },
   profileCard: { backgroundColor: colors.panel, borderColor: colors.border, borderWidth: 1, borderRadius: 16, padding: 16 },
@@ -181,8 +186,9 @@ const styles = StyleSheet.create({
   statValue: { color: colors.text, fontSize: 23, fontWeight: "900", fontVariant: ["tabular-nums"] },
   statLabel: { color: colors.muted, fontSize: 9, fontWeight: "800", letterSpacing: 1.1 },
   statAccent: { width: 18, height: 2, backgroundColor: colors.accent, marginTop: 3, borderRadius: 2 },
-  heroRow: { flexDirection: "row", gap: 9 },
-  heroCard: { flex: 1, backgroundColor: colors.panel, borderColor: colors.border, borderWidth: 1, borderRadius: 13, padding: 11, minWidth: 0 },
+  heroRow: { flexDirection: "row", gap: 9, flexWrap: "wrap" },
+  heroRowWide: { gap: 14 },
+  heroCard: { flex: 1, minWidth: 145, backgroundColor: colors.panel, borderColor: colors.border, borderWidth: 1, borderRadius: 13, padding: 11, minWidth: 0 },
   heroIcon: { width: 34, height: 34, borderRadius: 10, backgroundColor: "#22283A", alignItems: "center", justifyContent: "center", marginBottom: 10 },
   heroIconHot: { backgroundColor: "#3A2530" },
   heroInitial: { color: colors.text, fontWeight: "900", fontSize: 16 },
