@@ -50,6 +50,8 @@ jobs:
           gradle-version: 8.11.1
       - name: Build TV APK
         working-directory: apps/tv
+        env:
+          RI_API_BASE_URL: ${{ vars.RI_API_BASE_URL }}
         run: gradle assembleDebug
       - uses: actions/upload-artifact@v4
         with:
