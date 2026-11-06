@@ -36,6 +36,10 @@ jobs:
       - name: Check TypeScript
         run: npm run typecheck
       - name: Export website
+        env:
+          EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL }}
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+          EXPO_PUBLIC_API_BASE_URL: ${{ vars.EXPO_PUBLIC_API_BASE_URL }}
         run: npm run build:web
       - name: Disable Jekyll
         run: touch dist/.nojekyll
