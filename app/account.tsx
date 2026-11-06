@@ -40,8 +40,12 @@ export default function AccountScreen() {
   async function refresh() {
     const account = await getAccount();
     setUser(account.user);
-    const result = await getDevices();
-    setDevices(result.devices);
+    try {
+      const result = await getDevices();
+      setDevices(result.devices);
+    } catch {
+      setDevices([]);
+    }
   }
   useEffect(() => { refresh().catch(() => setUser(null)); }, []);
 
