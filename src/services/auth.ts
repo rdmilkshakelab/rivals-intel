@@ -2,8 +2,8 @@ import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { createClient, type User } from "@supabase/supabase-js";
 
-const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "https://yqoyksfsiqmnjnnbrzun.supabase.co";
-const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlxb3lrc2ZzaXFtbmpubmJyenVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5OTUxNTMsImV4cCI6MjEwOTU3MTE1M30.YTvzjjv0zGeqJKROFfnmZ7nmXMMnSfI_wxdobd2BbT0";
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL || "https://yqoyksfsiqmnjnnbrzun.supabase.co";
+const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ5cW95a3Nmc2lxbW5qbm5icnp1biIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzkzOTk1MTUzLCJleHAiOjIxMDk1NzExNTN9.YTvzjjv0zGeqJKROFfnmZ7nmXMMnSfI_wxdobd2BbT0";
 const API_BASE = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, "");
 
 const secureStorage = {
@@ -70,6 +70,10 @@ export async function loginAccount(email: string, password: string, extra: { tot
   ensureSupabaseKey();
   const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
   if (error) throw error;
+  if (extra.recoveryCode) {
+    await supabase.auth.signOut();
+    throw new Error("Recovery-code sign-in is not available yet. Use your password and authenticator code.");
+  }
   if (data.user.factors?.some((factor) => factor.status === "verified")) {
     const factor = data.user.factors.find((item) => item.status === "verified");
     if (factor && extra.totpCode) {
@@ -120,10 +124,19 @@ export async function confirmAuthenticator(code: string) {
   return { enabled: true, recoveryCodes: [] };
 }
 export async function disableAuthenticator(password: string, code: string) {
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user?.email) throw userError ?? new Error("Sign in again before changing authenticator settings.");
+  if (!password || !/^\d{6}$/.test(code)) throw new Error("Enter your account password and current six-digit authenticator code.");
+  const { error: passwordError } = await supabase.auth.signInWithPassword({ email: user.email, password });
+  if (passwordError) throw new Error("The account password was not accepted.");
   const { data: factors, error } = await supabase.auth.mfa.listFactors();
   if (error) throw error;
   const factor = factors.totp.find((item) => item.status === "verified");
   if (!factor) throw new Error("No verified authenticator was found.");
+  const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({ factorId: factor.id });
+  if (challengeError) throw challengeError;
+  const { error: verifyError } = await supabase.auth.mfa.verify({ factorId: factor.id, challengeId: challenge.id, code });
+  if (verifyError) throw new Error("The authenticator code was not accepted.");
   const { error: unenrollError } = await supabase.auth.mfa.unenroll({ factorId: factor.id });
   if (unenrollError) throw unenrollError;
   return { enabled: false };
