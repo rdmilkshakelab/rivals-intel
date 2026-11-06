@@ -28,12 +28,9 @@ jobs:
       - run: npm install
       - run: npx expo install --check
       - run: npx expo prebuild --platform android --clean
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: 8.11.1
       - name: Assemble installable mobile debug APK
         working-directory: android
-        run: gradle assembleDebug
+        run: ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: rivals-intel-android
