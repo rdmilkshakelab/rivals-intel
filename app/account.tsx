@@ -53,8 +53,16 @@ export default function AccountScreen() {
 
   async function submitAuth() {
     await run(async () => {
-      if (mode === "register") await registerAccount(email, username, password);
-      else await loginAccount(email, password, { totpCode: totpCode || undefined, recoveryCode: recoveryCode || undefined });
+      if (mode === "register") {
+        const result = await registerAccount(email, username, password);
+        if (result.confirmationRequired) {
+          setMessage("Account created. Check your email for the Supabase confirmation link, then return here to sign in.");
+          setMode("login");
+          return;
+        }
+      } else {
+        await loginAccount(email, password, { totpCode: totpCode || undefined, recoveryCode: recoveryCode || undefined });
+      }
       await refresh();
       setMessage("You're signed in.");
     });
@@ -96,7 +104,7 @@ export default function AccountScreen() {
             <Action label={mode === "login" ? "CREATE AN ACCOUNT" : "I ALREADY HAVE AN ACCOUNT"} onPress={() => setMode(mode === "login" ? "register" : "login")} secondary/>
           </View>
           {message ? <Text style={styles.message}>{message}</Text> : null}
-          <Text style={styles.small}>Account creation currently requires a configured Rivals Intel API and PostgreSQL database. Email verification is not yet wired to a mail provider.</Text>
+          <Text style={styles.small}>Accounts use Supabase Auth. If email confirmation is enabled, check your inbox after registration. Device management and TV pairing still require the separate Rivals Intel API.</Text>
         </ScrollView>
       </SafeAreaView>
     );
