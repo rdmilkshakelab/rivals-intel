@@ -3,7 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import { createClient, type User } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "https://yqoyksfsiqmnjnnbrzun.supabase.co";
-const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
+const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlxb3lrc2ZzaXFtbmpubmJyenVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5OTUxNTMsImV4cCI6MjEwOTU3MTE1M30.YTvzjjv0zGeqJKROFfnmZ7nmXMMnSfI_wxdobd2BbT0";
 const API_BASE = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, "");
 
 const secureStorage = {
@@ -106,7 +106,7 @@ export async function beginAuthenticatorSetup() {
   ensureSupabaseKey();
   const { data, error } = await supabase.auth.mfa.enroll({ factorType: "totp", issuer: "Rivals Intel" });
   if (error) throw error;
-  return { secret: data.totp.secret, otpauthUri: data.totp.uri, qrCodeDataUrl: "" , factorId: data.id };
+  return { secret: data.totp.secret, otpauthUri: data.totp.uri, qrCodeDataUrl: "data:image/svg+xml;charset=utf-8," + encodeURIComponent(data.totp.qr_code), factorId: data.id };
 }
 export async function confirmAuthenticator(code: string) {
   const { data: factors, error: listError } = await supabase.auth.mfa.listFactors();
