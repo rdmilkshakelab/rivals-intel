@@ -106,7 +106,6 @@ function userCode() {
 export async function initialiseAuth() {
   if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required to enable accounts.");
   keyForEncryption();
-  keyForEncryption();
   await pool.query(
     "CREATE TABLE IF NOT EXISTS ri_users (" +
     "id UUID PRIMARY KEY DEFAULT gen_random_uuid(), email TEXT NOT NULL UNIQUE, username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL, " +
