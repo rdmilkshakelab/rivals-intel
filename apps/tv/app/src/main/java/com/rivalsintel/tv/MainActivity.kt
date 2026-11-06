@@ -216,7 +216,14 @@ class MainActivity : Activity() {
     }
 
     private fun requestGet(path: String): JSONObject {
-        val prefs = getSharedPreferences("rivals-intel-secure", MODE_PRIVATE)
+        val masterKey = MasterKey.Builder(this).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+        val prefs = EncryptedSharedPreferences.create(
+            this,
+            "rivals-intel-secure",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
         val connection = (URL(BuildConfig.API_BASE_URL.trimEnd('/') + path).openConnection() as HttpURLConnection)
         connection.requestMethod = "GET"
         connection.connectTimeout = 12000
