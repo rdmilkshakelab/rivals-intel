@@ -43,8 +43,8 @@ class MainActivity : Activity() {
             root.addView(button("BACK") { page = 0; render() })
         }
         setContentView(root)
-        root.findViewWithTag<View>("focus")?.requestFocus()
-        root.getChildAt(if (page == 0) 4 else 3)?.requestFocus()
+        val firstActionIndex = if (page == 0) 5 else 3
+        root.post { root.getChildAt(firstActionIndex)?.requestFocus() }
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK && page != 0) { page = 0; render(); return true }
