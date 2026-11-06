@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Linking } from "react-native";
 import { fetchPlayer } from "@/services/api";
-import { demoPlayer, demoMatches, type PlayerSummary } from "@/services/demo";
+import type { PlayerSummary } from "@/services/demo";
 import { colors } from "@/theme/colors";
 import { WebNav } from "@/components/WebNav";
 
@@ -32,9 +32,9 @@ export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const isWide = width >= 900;
   const [query, setQuery] = useState("");
-  const [player, setPlayer] = useState<PlayerSummary>(demoPlayer);
+  const [player, setPlayer] = useState<PlayerSummary>({ name: "No player selected", uid: "—", platform: "Search above", rank: "—", winRate: 0, kills: 0, deaths: 0, wins: 0, matches: 0, heroes: [] });
   const [loading, setLoading] = useState(false);
-  const [notice, setNotice] = useState("Showing sample data. Search for a player when the API proxy is configured.");
+  const [notice, setNotice] = useState("Search for a public player profile to load real statistics.");
 
   const kd = useMemo(() => (player.deaths > 0 ? (player.kills / player.deaths).toFixed(2) : player.kills.toFixed(2)), [player]);
 
@@ -137,17 +137,13 @@ export default function HomeScreen() {
           <Text style={styles.sectionTitle}>Recent results</Text>
         </View>
         <View style={styles.matchList}>
-          {demoMatches.map((match) => (
-            <View key={match.id} style={styles.matchRow}>
-              <View style={[styles.resultBar, match.result === "VICTORY" ? styles.winBar : styles.lossBar]} />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.matchHero}>{match.hero} <Text style={styles.matchMode}>· {match.mode}</Text></Text>
-                <Text style={styles.matchMeta}>{match.map} · {match.when}</Text>
-              </View>
-              <View style={styles.matchNumbers}>
-                <Text style={[styles.matchResult, match.result === "VICTORY" ? styles.winText : styles.lossText]}>{match.result}</Text>
-                <Text style={styles.matchKda}>{match.kills}/{match.deaths}/{match.assists}</Text>
-              </View>
+          <View style={styles.matchRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.matchHero}>Match history unavailable</Text>
+              <Text style={styles.matchMeta}>The current stats provider does not expose recent match results.</Text>
+            </View>
+          </View>
+        </View>
             </View>
           ))}
         </View>
