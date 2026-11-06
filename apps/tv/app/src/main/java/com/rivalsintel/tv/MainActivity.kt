@@ -163,7 +163,7 @@ class MainActivity : Activity() {
             setHintTextColor(muted)
             setTextColor(white)
             textSize = 18f
-            singleLine = true
+            setSingleLine(true)
             setPadding(18, 14, 18, 14)
             isFocusable = true
             isFocusableInTouchMode = true
