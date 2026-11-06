@@ -3,11 +3,13 @@ import express from "express";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 import { initialiseAuth, registerAuthRoutes } from "./auth.js";
+import { API } from "mrivals";
 
 const app = express();
 const port = Number(process.env.PORT || 4000);
-const apiKey = process.env.MARVEL_RIVALS_API_KEY;
-const upstream = "https://marvelrivalsapi.com/api/v1";
+const profileCache = new Map();
+const PROFILE_CACHE_TTL = Number(process.env.MRIVALS_CACHE_SECONDS || 300) * 1000;
+const profileLimiter = rateLimit({ windowMs: 60 * 1000, limit: 12, standardHeaders: "draft-7", legacyHeaders: false });
 const allowedOrigins = (process.env.ALLOWED_ORIGIN || "").split(",").map((value) => value.trim()).filter(Boolean);
 
 app.use(cors({
@@ -30,36 +32,35 @@ app.use("/api/device", (req, res, next) => {
 
 app.get("/health", (_req, res) => res.json({ ok: true, service: "rivals-intel-api", accountsConfigured: Boolean(process.env.DATABASE_URL) }));
 
-async function upstreamGet(path) {
-  if (!apiKey) {
-    const error = new Error("MARVEL_RIVALS_API_KEY is not configured on the server.");
-    error.status = 503;
-    throw error;
-  }
-  const response = await fetch(upstream + path, { headers: { "x-api-key": apiKey, accept: "application/json" } });
-  if (!response.ok) {
-    const error = new Error("MarvelRivalsAPI returned " + response.status + ".");
-    error.status = response.status;
-    throw error;
-  }
-  return response.json();
+async function fetchMrivalsProfile(username) {
+  const key = username.trim().toLowerCase();
+  const cached = profileCache.get(key);
+  if (cached && cached.expiresAt > Date.now()) return { ...cached.data, cached: true };
+  const options = {};
+  if (process.env.MRIVALS_FLARESOLVERR_URL) options.flaresolverrUrl = process.env.MRIVALS_FLARESOLVERR_URL;
+  else if (process.env.MRIVALS_USE_CURL === "true") options.useCurl = true;
+  const user = await API.fetchUser(username, options);
+  const data = { username, info: user.info(), overview: user.overview(), heroes: user.heroes(), roles: user.roles(), peakRank: user.peakRank(), source: "Tracker Network via mrivals", fetchedAt: new Date().toISOString(), cached: false };
+  profileCache.set(key, { data, expiresAt: Date.now() + PROFILE_CACHE_TTL });
+  if (profileCache.size > 500) { const oldest = profileCache.keys().next().value; if (oldest) profileCache.delete(oldest); }
+  return data;
 }
-app.get("/api/player/:query", async (req, res) => {
-  try { res.json({ player: await upstreamGet("/player/" + encodeURIComponent(req.params.query)) }); }
-  catch (error) { res.status(error.status || 502).json({ error: error.message || "Upstream request failed." }); }
-});
-app.get("/api/player/:query/match-history", async (req, res) => {
+
+app.get("/api/player/:query", profileLimiter, async (req, res) => {
+  const username = String(req.params.query || "").trim();
+  if (!/^[a-zA-Z0-9_. -]{2,32}$/.test(username)) return res.status(400).json({ error: "Enter a valid player username." });
   try {
-    const params = new URLSearchParams();
-    for (const key of ["season", "game_mode", "page", "limit"]) if (req.query[key] !== undefined) params.set(key, String(req.query[key]));
-    const suffix = params.size ? "?" + params.toString() : "";
-    res.json(await upstreamGet("/player/" + encodeURIComponent(req.params.query) + "/match-history" + suffix));
-  } catch (error) { res.status(error.status || 502).json({ error: error.message || "Upstream request failed." }); }
+    const player = await fetchMrivalsProfile(username);
+    res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=240");
+    res.json({ player });
+  } catch (error) {
+    const message = String(error?.message || "Tracker Network lookup failed.");
+    const notFound = /could not find|not found|does not exist/i.test(message);
+    res.status(notFound ? 404 : 502).json({ error: notFound ? "We couldn't find that public Tracker Network profile." : "Tracker Network is temporarily unavailable. Please try again shortly.", source: "mrivals" });
+  }
 });
-app.get("/api/heroes", async (_req, res) => {
-  try { res.json(await upstreamGet("/heroes")); }
-  catch (error) { res.status(error.status || 502).json({ error: error.message || "Upstream request failed." }); }
-});
+app.get("/api/player/:query/match-history", (_req, res) => res.status(501).json({ error: "Match history is not currently exposed by mrivals." }));
+app.get("/api/heroes", (_req, res) => res.status(501).json({ error: "A global hero catalogue is not exposed by mrivals." }));
 
 registerAuthRoutes(app);
 app.use((error, _req, res, _next) => {
