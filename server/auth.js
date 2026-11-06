@@ -312,7 +312,14 @@ export function registerAuthRoutes(app) {
       await client.query("INSERT INTO ri_sessions (user_id,token_hash,device_name,user_agent,ip_address,expires_at) VALUES ($1,$2,$3,$4,$5,$6)", [device.user_id, sha256(token), device.device_name, String(req.headers["user-agent"] || "").slice(0, 500), req.ip, expires]);
       await client.query("UPDATE ri_device_codes SET status='consumed' WHERE id=$1", [device.id]);
       await client.query("COMMIT");
-      res.json({ status: "complete", token, expiresAt: expires });
+      if (req.headers["x-ri-client"] === "native") {
+        // Native apps store this bearer token in the platform secure store.
+        res.json({ status: "complete", token, expiresAt: expires });
+      } else {
+        // Browsers keep the session in an HttpOnly cookie, never web storage.
+        setCookie(res, token);
+        res.json({ status: "complete", expiresAt: expires });
+      }
     } catch (error) {
       await client.query("ROLLBACK");
       next(error);

@@ -13,7 +13,8 @@ The account foundation is shared by the Expo mobile app and Expo web build.
 - TOTP secrets are encrypted at rest with AES-256-GCM using AUTH_ENCRYPTION_KEY.
 - Ten one-time recovery codes are generated on enrollment; only hashes are stored.
 - The mobile app includes an in-app QR scanner, and the web activation page accepts a short code.
-- TV/device authorisation creates a random device secret plus a short user code. The TV polls with its private device secret. A signed-in user approves the short code, and the server returns a new session token once.
+- TV/device authorisation creates a random device secret plus a short user code. The TV polls with its private device secret. A signed-in user approves the short code, and the server returns a new session once. Native clients receive a bearer token for SecureStore; browser clients receive an HttpOnly cookie.
+- Device polling has its own 150-request-per-15-minute IP limit. The current five-second polling interval can make up to 120 requests during the ten-minute code lifetime; authorise/approve actions retain a tighter 30-request limit.
 - Account and device endpoints have basic IP-based rate limiting.
 
 ## Not yet production-complete
@@ -47,7 +48,7 @@ cp .env.example .env
 npm run dev
 ~~~
 
-Set the root .env value EXPO_PUBLIC_API_BASE_URL to the reachable API origin. For a physical phone, use the Codespaces forwarded port URL or your computer's LAN IP, not localhost.
+Set the root .env value EXPO_PUBLIC_API_BASE_URL to the reachable API origin. For a physical phone, use the Codespaces forwarded port URL or your computer's LAN IP, not localhost. For browser cookie sessions, preferably host the web app and API on the same site (for example, app.example.com and api.example.com); the session cookie is HttpOnly and SameSite=Lax.
 
 The server creates the initial account tables on startup. A managed migration process should replace this bootstrap schema before production.
 

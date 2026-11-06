@@ -32,7 +32,7 @@ This is a target shape, not a request to create empty platform projects now. Kee
 
 - Domain models for player profiles, hero summaries, match history and permitted live-session data.
 - API request/response handling, validation and normalisation.
-- Authentication/session rules when accounts are introduced.
+- Shared account/session concepts and API contracts. The current foundation includes email/password auth, optional TOTP, one-time recovery codes, device sessions and QR/device-code pairing; the UI and backend still need live-database and production validation.
 - Design tokens: colours, spacing, typography and semantic status colours.
 - Business rules and formatting for statistics.
 - Backend services and the server-side upstream API key.
@@ -84,6 +84,27 @@ Keep these responsibilities separate. The companion should validate and filter e
 - Add authentication, short-lived pairing codes, rate limits and authenticated realtime transport before any live companion is exposed publicly.
 - Treat third-party API data as optional: profiles may be private, incomplete, rate-limited or unavailable.
 - Do not store or display data that current game, API or Overwolf policies prohibit.
+
+## Current repository snapshot (checked 2026-11-06)
+
+The repository now contains more than the original dashboard starter:
+
+- Expo SDK 58, React Native and TypeScript app with a sample-data player dashboard.
+- Account screen for registration/login, authenticator setup, recovery codes and device-session management.
+- Activation, device-login and in-app QR-scanner routes.
+- Express API with PostgreSQL account/session tables, TOTP support, device pairing and the server-side stats API proxy.
+- GitHub Actions validation for app typechecking and server JavaScript syntax.
+
+The account and pairing code is a foundation, not a production-ready identity service. Email verification, password reset, new-device alerts, a live PostgreSQL deployment, automated auth tests, security review and deployment configuration remain outstanding. The dashboard still uses sample match history. The repository has no completed iOS Live Activity, Google TV package, native Mac app or Windows Overwolf companion.
+
+### Immediate priority
+
+1. Keep the current Expo app as the only mobile codebase. Fix and pass the existing CI typecheck before adding screens or native targets.
+2. Run the app in Codespaces and confirm the dashboard, account routes and QR scanner render on a real phone.
+3. Start the API and verify `/health`; then configure PostgreSQL privately and smoke-test registration, TOTP, sessions and device pairing.
+4. Connect and inspect real player and match-history responses before removing sample labels.
+5. Make the same app responsive for iPad and browser widths. Treat the browser dashboard as the first Mac experience.
+6. Only after those gates pass, prototype Google TV remote navigation, then investigate native iOS Live Activities and the Windows Overwolf companion separately.
 
 ## Recommended delivery phases
 

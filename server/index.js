@@ -20,7 +20,13 @@ app.use(cors({
 app.use(express.json({ limit: "32kb" }));
 app.use("/api/auth", rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: "draft-7", legacyHeaders: false }));
 app.use("/api/account", rateLimit({ windowMs: 15 * 60 * 1000, limit: 30, standardHeaders: "draft-7", legacyHeaders: false }));
-app.use("/api/device", rateLimit({ windowMs: 15 * 60 * 1000, limit: 30, standardHeaders: "draft-7", legacyHeaders: false }));
+const devicePollLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 150, standardHeaders: "draft-7", legacyHeaders: false });
+const deviceActionLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 30, standardHeaders: "draft-7", legacyHeaders: false });
+app.use("/api/device", (req, res, next) => {
+  // A 5-second poll over the 10-minute pairing window needs up to 120 requests.
+  const limiter = req.path === "/poll" ? devicePollLimiter : deviceActionLimiter;
+  limiter(req, res, next);
+});
 
 app.get("/health", (_req, res) => res.json({ ok: true, service: "rivals-intel-api", accountsConfigured: Boolean(process.env.DATABASE_URL) }));
 
