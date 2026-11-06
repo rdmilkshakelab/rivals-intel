@@ -79,7 +79,8 @@ Rivals Intel is planned as one ecosystem across iPhone, iPad, Dynamic Island, Go
 - [x] Device sessions, remote revocation and sign-out-others
 - [x] QR and short-code device pairing backend
 - [x] Account, device, activation and mobile QR-scanner screens
-- [ ] Install dependencies and run typecheck/build
+- [x] GitHub Actions installs dependencies, passes the app TypeScript typecheck and checks server JavaScript syntax
+- [ ] Run Expo web/native builds and verify the app in Codespaces and on a phone
 - [ ] Configure and test a persistent PostgreSQL instance
 - [ ] Add email verification and password reset
 - [x] Device renaming
