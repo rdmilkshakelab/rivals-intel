@@ -17,7 +17,8 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "baseUrl": "/rivals-intel"
     },
     "android": {
       "package": "com.rdmilkeshakelab.rivalsintel"
