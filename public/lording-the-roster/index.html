@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090912">
+<title>Lording the Roster | Marvel Rivals Challenge</title>
+<style>
+:root{color-scheme:dark;--bg:#090912;--panel:#12121f;--panel2:#19182a;--line:#29263d;--text:#f4f0ff;--muted:#9691aa;--purple:#a78bfa;--pink:#f472b6;--green:#71e0b2;--gold:#f5cc79;--red:#f28d9b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% -10%,#332052 0,transparent 38%),radial-gradient(ellipse at 95% 10%,#202c4c 0,transparent 30%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.wrap{width:min(1180px,calc(100% - 32px));margin:auto;padding:28px 0 56px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:38px}.brand{font-size:12px;letter-spacing:2.8px;font-weight:900;color:var(--muted)}.brand b{color:var(--purple)}.save{font-size:11px;color:var(--green);border:1px solid #315c50;border-radius:99px;padding:7px 11px}
+.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:22px;align-items:end;margin-bottom:26px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--pink);font-weight:900}.hero h1{font-size:clamp(36px,7vw,66px);line-height:.98;letter-spacing:-2.8px;margin:12px 0 14px}.hero h1 span{color:var(--purple)}.intro{max-width:650px;color:#b8b2ca;margin:0}.hero-side{background:linear-gradient(145deg,#211b35,#131321);border:1px solid #3a3154;border-radius:18px;padding:20px}.hero-side strong{font-size:13px;letter-spacing:1px}.big-progress{font-size:38px;font-weight:900;letter-spacing:-1.5px;margin:4px 0}.bar{height:9px;background:#302b40;border-radius:99px;overflow:hidden}.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:99px;transition:width .25s}.sub{font-size:11px;color:var(--muted);margin-top:9px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0 30px}.stat{background:#11111d;border:1px solid var(--line);border-radius:14px;padding:15px}.stat strong{display:block;font-size:26px;letter-spacing:-1px}.stat span{color:var(--muted);font-size:10px;letter-spacing:1.2px;font-weight:800}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:24px 0 14px}.search{flex:1;min-width:190px}.field{width:100%;background:#11111d;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:11px 13px;outline:none}.field:focus{border-color:var(--purple)}.filters{display:flex;gap:7px;flex-wrap:wrap}.pill,.action{border:1px solid var(--line);background:#151423;color:#bdb7ce;border-radius:999px;padding:9px 13px;font-size:11px;font-weight:800}.pill.active{background:#33264c;border-color:#7855a6;color:#fff}.action{border-radius:9px}.action.primary{background:#7653a9;border-color:#9873cb;color:white}.action:hover,.pill:hover{border-color:var(--purple);color:white}
+.section-line{display:flex;justify-content:space-between;align-items:center;margin:22px 0 12px}.section-line h2{font-size:13px;letter-spacing:1.5px;margin:0}.section-line span{font-size:11px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.hero-card{background:linear-gradient(145deg,#171625,#11111c);border:1px solid var(--line);border-radius:13px;padding:13px;min-width:0;transition:border-color .15s}.hero-card:hover{border-color:#655083}.card-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.hero-name{font-size:14px;font-weight:850;line-height:1.25}.role{font-size:9px;color:var(--muted);letter-spacing:1.1px;font-weight:850;margin-top:5px}.status{font-size:9px;font-weight:900;letter-spacing:.6px;padding:5px 7px;border-radius:6px;white-space:nowrap}.status.not{color:#aaa5b8;background:#292735}.status.progress{color:var(--gold);background:#42351f}.status.done{color:var(--green);background:#183a32}.card-bottom{display:flex;gap:8px;margin-top:12px;align-items:center}.cycle{flex:1;border:1px solid var(--line);background:#1c1a2a;color:#e8e1f7;border-radius:8px;padding:8px;font-size:10px;font-weight:850}.edit{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:8px;padding:8px 10px;font-size:10px}.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:35px;border:1px dashed var(--line);border-radius:12px}
+.footer{border-top:1px solid var(--line);margin-top:36px;padding-top:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#777187;font-size:10px}.footer a{color:#b7a0df;text-decoration:none}
+dialog{background:#171625;color:var(--text);border:1px solid #4a3c62;border-radius:16px;width:min(460px,calc(100% - 28px));padding:20px;box-shadow:0 25px 80px #0009}dialog::backdrop{background:#05050bd9}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.modal-head h3{margin:0;font-size:18px}.close{background:transparent;border:0;color:var(--muted);font-size:22px}.form-row{margin:12px 0}.form-row label{display:block;font-size:10px;color:var(--muted);font-weight:900;letter-spacing:1px;margin-bottom:6px}.form-row textarea{min-height:80px;resize:vertical}.modal-actions{display:flex;justify-content:space-between;gap:8px;margin-top:18px}.modal-actions div{display:flex;gap:8px}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.hero-side{max-width:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,1fr)}.top{margin-bottom:28px}}
+@media(max-width:440px){.wrap{width:min(100% - 22px,1180px);padding-top:18px}.grid{grid-template-columns:1fr}.hero h1{letter-spacing:-1.8px}.filters{width:100%}.pill{flex:1}.stats{gap:8px}.stat{padding:12px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top"><div class="brand">RIVALS INTEL <b> / CREATOR CHALLENGE</b></div><div class="save" id="saveState">● SAVED IN THIS BROWSER</div></header>
+<section class="hero">
+<div><div class="eyebrow">THE 54-HERO MASTERY RUN</div><h1>LORDING<br><span>THE ROSTER.</span></h1><p class="intro">One roster. Every hero. One Lord at a time. Track the YouTube challenge from the first match to the final mastery badge.</p></div>
+<div class="hero-side"><strong>ROSTER COMPLETION</strong><div class="big-progress" id="percent">4%</div><div class="bar"><i id="progressBar"></i></div><div class="sub" id="progressCopy">2 of 54 heroes at Lord</div></div>
+</section>
+<section class="stats">
+<div class="stat"><strong id="lordCount">2</strong><span>LORDS EARNED</span></div>
+<div class="stat"><strong id="workingCount">2</strong><span>IN PROGRESS</span></div>
+<div class="stat"><strong id="remainingCount">50</strong><span>REMAINING</span></div>
+<div class="stat"><strong id="episodeCount">0</strong><span>EPISODES LOGGED</span></div>
+</section>
+<div class="section-line"><h2>THE HERO ROSTER</h2><span id="visibleCount">54 heroes</span></div>
+<div class="toolbar">
+<div class="search"><input class="field" id="search" type="search" placeholder="Search heroes…" aria-label="Search heroes"></div>
+<div class="filters" id="roleFilters"><button class="pill active" data-role="All">ALL</button><button class="pill" data-role="Duelist">DUELIST</button><button class="pill" data-role="Vanguard">VANGUARD</button><button class="pill" data-role="Strategist">STRATEGIST</button><button class="pill" data-role="Flex">FLEX</button></div>
+</div>
+<div class="toolbar" style="margin-top:0">
+<div class="filters" id="statusFilters"><button class="pill active" data-status="All">ALL STATUS</button><button class="pill" data-status="Not started">NOT STARTED</button><button class="pill" data-status="In progress">IN PROGRESS</button><button class="pill" data-status="Lord">LORD</button></div>
+</div>
+<div id="roster"></div>
+<footer class="footer"><span>LOADING SCREEN TO LORD SCREEN. KEEP GOING.</span><span><button class="action" id="exportBtn">EXPORT BACKUP</button> <button class="action" id="importBtn">IMPORT BACKUP</button> <input id="importFile" type="file" accept="application/json" hidden></span><span>Unofficial fan-made challenge tracker · <a href="../">Rivals Intel</a></span></footer>
+</main>
+<dialog id="heroDialog">
+<div class="modal-head"><h3 id="modalTitle">Hero details</h3><button class="close" id="closeModal" aria-label="Close">×</button></div>
+<div class="form-row"><label for="level">CURRENT PROFICIENCY LEVEL / NOTE</label><input class="field" id="level" placeholder="e.g. Level 7, Centurion, Captain…"></div>
+<div class="form-row"><label for="episode">YOUTUBE EPISODE</label><input class="field" id="episode" placeholder="e.g. Episode 04"></div>
+<div class="form-row"><label for="notes">NOTES</label><textarea class="field" id="notes" placeholder="Build, progress, video idea, memorable match…"></textarea></div>
+<div class="modal-actions"><button class="action" id="resetHero">RESET HERO</button><div><button class="action" id="cancelModal">CANCEL</button><button class="action primary" id="saveHero">SAVE DETAILS</button></div></div>
+</dialog>
+<script>
+const heroes=[
+["Adam Warlock","Strategist"],["Angela","Vanguard"],["Black Cat","Duelist"],["Black Panther","Duelist"],["Black Widow","Duelist"],["Blade","Duelist"],["Captain America","Vanguard"],["Cloak & Dagger","Strategist"],["Cyclops","Duelist"],["Daredevil","Duelist"],["Deadpool","Flex"],["Devil Dinosaur","Vanguard"],["Doctor Strange","Vanguard"],["Elsa Bloodstone","Duelist"],["Emma Frost","Vanguard"],["Gambit","Strategist"],["Gorr the God Butcher","Duelist"],["Groot","Vanguard"],["Hawkeye","Duelist"],["Hela","Duelist"],["Hulk","Vanguard"],["Human Torch","Duelist"],["Invisible Woman","Strategist"],["Iron Fist","Duelist"],["Iron Man","Duelist"],["Jeff the Land Shark","Strategist"],["Jubilee","Strategist"],["Loki","Strategist"],["Luna Snow","Strategist"],["Magik","Duelist"],["Magneto","Vanguard"],["Mantis","Strategist"],["Mister Fantastic","Duelist"],["Moon Knight","Duelist"],["Namor","Duelist"],["Peni Parker","Vanguard"],["Phoenix","Duelist"],["Psylocke","Duelist"],["Rocket Raccoon","Strategist"],["Rogue","Vanguard"],["Scarlet Witch","Duelist"],["Spider-Man","Duelist"],["Squirrel Girl","Duelist"],["Star-Lord","Duelist"],["Storm","Duelist"],["The Hood","Vanguard"],["The Punisher","Duelist"],["The Thing","Vanguard"],["Thor","Vanguard"],["Ultron","Strategist"],["Venom","Vanguard"],["White Fox","Strategist"],["Winter Soldier","Duelist"],["Wolverine","Duelist"]
+];
+const KEY="lording-the-roster-v1";
+const defaults={};
+heroes.forEach(([name])=>defaults[name]={status:"Not started",level:"",episode:"",notes:""});
+defaults["Bucky"]={status:"Lord",level:"Lord",episode:"",notes:"Existing Lord mastery."};
+defaults["Winter Soldier"]={status:"Lord",level:"Lord",episode:"",notes:"Bucky. Existing Lord mastery."};
+defaults["Spider-Man"]={status:"Lord",level:"Lord",episode:"",notes:"Existing Lord mastery."};
+defaults["Psylocke"]={status:"In progress",level:"Level 7",episode:"",notes:"Current Lording the Roster video project."};
+defaults["Captain America"]={status:"In progress",level:"Nearly Captain",episode:"",notes:"Already close to Captain proficiency."};
+let data={};
+try{data={...defaults,...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch{data={...defaults}}
+let role="All",status="All",activeHero=null;
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(KEY,JSON.stringify(data));$("saveState").textContent="● SAVED IN THIS BROWSER"}
+function counts(){const values=heroes.map(([n])=>data[n]||defaults[n]);const l=values.filter(x=>x.status==="Lord").length,p=values.filter(x=>x.status==="In progress").length,e=values.filter(x=>x.episode.trim()).length,percent=Math.round(l/heroes.length*100);$("lordCount").textContent=l;$("workingCount").textContent=p;$("remainingCount").textContent=heroes.length-l;$("episodeCount").textContent=e;$("percent").textContent=percent+"%";$("progressBar").style.width=percent+"%";$("progressCopy").textContent=l+" of "+heroes.length+" heroes at Lord"}
+function render(){counts();const q=$("search").value.trim().toLowerCase();const filtered=heroes.filter(([n,r])=>(role==="All"||r===role)&&(status==="All"||(data[n]||defaults[n]).status===status)&&n.toLowerCase().includes(q));$("visibleCount").textContent=filtered.length+" of "+heroes.length+" heroes";const groups=["Duelist","Vanguard","Strategist","Flex"];const list=role==="All"?groups:[role];$("roster").innerHTML=list.map(group=>{const rows=filtered.filter(([n,r])=>r===group);if(!rows.length)return"";return '<section><div class="section-line"><h2>'+group.toUpperCase()+(group==="Flex"?" / MULTI-ROLE":"")+'</h2><span>'+rows.length+' heroes</span></div><div class="grid">'+rows.map(([name])=>{const d=data[name]||defaults[name],cls=d.status==="Lord"?"done":d.status==="In progress"?"progress":"not",label=d.status==="Lord"?"LORD EARNED":d.status==="In progress"?"IN PROGRESS":"NOT STARTED";return '<article class="hero-card"><div class="card-top"><div><div class="hero-name">'+name+'</div><div class="role">'+group.toUpperCase()+'</div></div><span class="status '+cls+'">'+label+'</span></div><div class="card-bottom"><button class="cycle" data-cycle="'+name+'">'+(d.status==="Lord"?"✓ LORD COMPLETE":d.status==="In progress"?"UPDATE PROGRESS":"START HERO")+'</button><button class="edit" data-edit="'+name+'">DETAILS</button></div>'+(d.level?'<div class="sub">'+escapeHtml(d.level)+'</div>':"")+(d.episode?'<div class="sub">'+escapeHtml(d.episode)+'</div>':"")+'</article>'}).join("")+'</div></section>'}).join("")||'<div class="empty">No heroes match those filters.</div>';document.querySelectorAll("[data-cycle]").forEach(b=>b.addEventListener("click",()=>cycle(b.dataset.cycle)));document.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>edit(b.dataset.edit)))}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function cycle(name){const d=data[name]||{...defaults[name]};d.status=d.status==="Not started"?"In progress":d.status==="In progress"?"Lord":"Not started";if(d.status==="Lord")d.level="Lord";data[name]=d;save();render()}
+function edit(name){activeHero=name;const d=data[name]||defaults[name];$("modalTitle").textContent=name;$("level").value=d.level;$("episode").value=d.episode;$("notes").value=d.notes;$("heroDialog").showModal()}
+function close(){ $("heroDialog").close();activeHero=null}
+$("roleFilters").addEventListener("click",e=>{const b=e.target.closest("[data-role]");if(!b)return;role=b.dataset.role;document.querySelectorAll("#roleFilters .pill").forEach(x=>x.classList.toggle("active",x===b));render()});
+$("statusFilters").addEventListener("click",e=>{const b=e.target.closest("[data-status]");if(!b)return;status=b.dataset.status;document.querySelectorAll("#statusFilters .pill").forEach(x=>x.classList.toggle("active",x===b));render()});
+$("search").addEventListener("input",render);
+$("saveHero").onclick=()=>{const d=data[activeHero]||{...defaults[activeHero]};d.level=$("level").value.trim();d.episode=$("episode").value.trim();d.notes=$("notes").value.trim();if(d.level.toLowerCase()==="lord")d.status="Lord";data[activeHero]=d;save();close();render()};
+$("resetHero").onclick=()=>{if(!activeHero)return;data[activeHero]={...defaults[activeHero]};save();close();render()};
+$("closeModal").onclick=close;$("cancelModal").onclick=close;
+$("exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="lording-the-roster-backup.json";a.click();URL.revokeObjectURL(a.href)};
+$("importBtn").onclick=()=>$("importFile").click();
+$("importFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const parsed=JSON.parse(await f.text());if(!parsed||typeof parsed!=="object")throw Error();data={...defaults,...parsed};save();render()}catch{alert("That backup file could not be read.")}e.target.value=""};
+render();
+</script>
+</body></html>
