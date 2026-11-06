@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { Linking } from "react-native";
 import { fetchPlayer } from "@/services/api";
 import { demoPlayer, demoMatches, type PlayerSummary } from "@/services/demo";
 import { colors } from "@/theme/colors";
@@ -81,6 +82,15 @@ export default function HomeScreen() {
           </Pressable>
         </View>
         {notice ? <Text style={styles.notice}>{notice}</Text> : null}
+
+        <Pressable onPress={() => Linking.openURL("https://rdmilkshakelab.github.io/rivals-intel/lording-the-roster/")} style={styles.challengeCard}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.challengeEyebrow}>CREATOR CHALLENGE</Text>
+            <Text style={styles.challengeTitle}>Lording the Roster</Text>
+            <Text style={styles.challengeCopy}>Track every hero from first match to Lord mastery.</Text>
+          </View>
+          <Text style={styles.challengeArrow}>↗</Text>
+        </Pressable>
 
         <View style={[styles.sectionHeader, isWide && styles.sectionHeaderWide]}>
           <Text style={styles.sectionEyebrow}>PLAYER OVERVIEW</Text>
@@ -167,6 +177,11 @@ const styles = StyleSheet.create({
   searchButton: { backgroundColor: colors.accent, borderRadius: 10, paddingHorizontal: 15, justifyContent: "center", minWidth: 82, alignItems: "center" },
   searchButtonText: { color: "#fff", fontSize: 10, fontWeight: "900", letterSpacing: 0.7 },
   notice: { color: colors.muted, fontSize: 11, lineHeight: 16, marginTop: -10 },
+  challengeCard: { flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: "#191526", borderWidth: 1, borderColor: "#59436F", borderRadius: 14, padding: 15 },
+  challengeEyebrow: { color: colors.accent, fontSize: 8, fontWeight: "900", letterSpacing: 1.5 },
+  challengeTitle: { color: colors.text, fontSize: 16, fontWeight: "900", marginTop: 3 },
+  challengeCopy: { color: colors.muted, fontSize: 10, marginTop: 4 },
+  challengeArrow: { color: colors.accent, fontSize: 24, fontWeight: "900" },
   sectionHeader: { gap: 4, marginTop: 8 },
   sectionHeaderWide: { marginTop: 14 },
   sectionEyebrow: { color: colors.accent, fontSize: 9, fontWeight: "900", letterSpacing: 1.8 },
