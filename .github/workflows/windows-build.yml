@@ -1,0 +1,31 @@
+name: Build Rivals Intel Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "apps/windows/**"
+      - ".github/workflows/windows-build.yml"
+
+jobs:
+  windows:
+    name: Package Windows desktop installer
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: apps/windows
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install desktop dependencies
+        run: npm install
+      - name: Build Windows installer
+        run: npm run dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rivals-intel-windows
+          path: apps/windows/dist/*.exe
+          if-no-files-found: error
