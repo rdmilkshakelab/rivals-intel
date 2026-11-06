@@ -7,7 +7,15 @@
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
-    "plugins": ["expo-router", ["expo-camera", { "cameraPermission": "Allow Rivals Intel to scan device sign-in QR codes." }]],
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Rivals Intel to scan device sign-in QR codes."
+        }
+      ]
+    ],
     "experiments": {
       "typedRoutes": true
     },
@@ -16,6 +24,10 @@
     },
     "ios": {
       "bundleIdentifier": "com.rdmilkeshakelab.rivalsintel"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
     }
   }
 }
