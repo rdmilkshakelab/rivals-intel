@@ -28,7 +28,7 @@ npm install
 npx expo start
 ~~~
 
-Use Expo Go to scan the QR code, or press w to run the web preview. The dashboard uses sample data until a backend URL is configured.
+Use Expo Go to scan the QR code, or press w to run the web preview. For a production-style static web export, run `npm run build:web`; the finished site is written to `dist/`. The dashboard uses sample data until a backend URL is configured.
 
 ## Run the API
 
@@ -88,7 +88,8 @@ Rivals Intel is planned as one ecosystem across iPhone, iPad, Dynamic Island, Go
 - [ ] Review npm audit advisories and add reproducible npm lockfiles
 - [ ] Complete production security review and deployment
 - [ ] Validate real player profiles and match history
-- [ ] Responsive desktop web dashboard
+- [x] Responsive web dashboard foundation and static web export workflow
+- [ ] Deploy web build to a public hosting provider and configure the API origin
 - [ ] Overwolf Windows companion prototype, subject to current policy review
 - [ ] iOS Live Activity / Dynamic Island prototype using permitted data only
 - [ ] Google TV remote-first app build
