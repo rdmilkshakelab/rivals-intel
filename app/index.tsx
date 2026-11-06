@@ -15,6 +15,7 @@ import { Linking } from "react-native";
 import { fetchPlayer } from "@/services/api";
 import { demoPlayer, demoMatches, type PlayerSummary } from "@/services/demo";
 import { colors } from "@/theme/colors";
+import { WebNav } from "@/components/WebNav";
 
 function Stat({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
   return (
@@ -57,6 +58,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <WebNav />
       <ScrollView contentContainerStyle={[styles.content, isWide && styles.contentWide]} showsVerticalScrollIndicator={false}>
         <View style={styles.topline}>
           <View>
@@ -132,7 +134,7 @@ export default function HomeScreen() {
 
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionEyebrow}>RECENT ACTIVITY</Text>
-          <Text style={styles.sectionTitle}>Sample match history</Text>
+          <Text style={styles.sectionTitle}>Recent results</Text>
         </View>
         <View style={styles.matchList}>
           {demoMatches.map((match) => (
@@ -203,7 +205,7 @@ const styles = StyleSheet.create({
   statAccent: { width: 18, height: 2, backgroundColor: colors.accent, marginTop: 3, borderRadius: 2 },
   heroRow: { flexDirection: "row", gap: 9, flexWrap: "wrap" },
   heroRowWide: { gap: 14 },
-  heroCard: { flex: 1, minWidth: 145, backgroundColor: colors.panel, borderColor: colors.border, borderWidth: 1, borderRadius: 13, padding: 11, minWidth: 0 },
+  heroCard: { flex: 1, minWidth: 145, backgroundColor: colors.panel, borderColor: colors.border, borderWidth: 1, borderRadius: 13, padding: 11 },
   heroIcon: { width: 34, height: 34, borderRadius: 10, backgroundColor: "#22283A", alignItems: "center", justifyContent: "center", marginBottom: 10 },
   heroIconHot: { backgroundColor: "#3A2530" },
   heroInitial: { color: colors.text, fontWeight: "900", fontSize: 16 },
