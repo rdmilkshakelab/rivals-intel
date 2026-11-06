@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win nsis"
+    "dist": "electron-builder --win nsis",
+    "dist:mac": "electron-builder --mac dmg zip --universal"
   },
   "devDependencies": {
     "electron": "^40.0.0",
@@ -15,9 +16,25 @@
   "build": {
     "appId": "com.rivalsintel.desktop",
     "productName": "Rivals Intel",
-    "directories": { "output": "dist" },
-    "files": ["main.cjs", "preload.cjs", "assets/**/*"],
-    "win": { "target": ["nsis"], "artifactName": "Rivals-Intel-Setup-${version}.${ext}" },
-    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "createStartMenuShortcut": true }
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "Rivals-Intel-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }
