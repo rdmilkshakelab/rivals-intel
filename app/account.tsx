@@ -87,9 +87,9 @@ export default function AccountScreen() {
           <Text style={styles.title}>{mode === "login" ? "Welcome back." : "Create your account."}</Text>
           <Text style={styles.muted}>One account for your Rivals Intel devices.</Text>
           <View style={styles.card}>
-            <TextInput value={email} onChangeText={setEmail} placeholder="Email address" placeholderTextColor={muted} autoCapitalize="none" keyboardType="email-address" style={styles.input}/>
-            {mode === "register" ? <TextInput value={username} onChangeText={setUsername} placeholder="Username" placeholderTextColor={muted} autoCapitalize="none" style={styles.input}/> : null}
-            <TextInput value={password} onChangeText={setPassword} placeholder="Password (12+ characters)" placeholderTextColor={muted} secureTextEntry style={styles.input}/>
+            <TextInput value={email} onChangeText={setEmail} placeholder="Email address" placeholderTextColor={muted} autoCapitalize="none" keyboardType="email-address" autoComplete="email" textContentType="emailAddress" style={styles.input}/>
+            {mode === "register" ? <TextInput value={username} onChangeText={setUsername} placeholder="Username" placeholderTextColor={muted} autoCapitalize="none" autoComplete="username" style={styles.input}/> : null}
+            <TextInput value={password} onChangeText={setPassword} placeholder="Password (12+ characters)" placeholderTextColor={muted} secureTextEntry autoComplete={mode === "login" ? "current-password" : "new-password"} textContentType={mode === "login" ? "password" : "newPassword"} style={styles.input}/>
             {mode === "login" ? <TextInput value={totpCode} onChangeText={setTotpCode} placeholder="Authenticator code (if enabled)" placeholderTextColor={muted} keyboardType="number-pad" style={styles.input}/> : null}
             {mode === "login" ? <TextInput value={recoveryCode} onChangeText={setRecoveryCode} placeholder="Or recovery code" placeholderTextColor={muted} autoCapitalize="characters" style={styles.input}/> : null}
             <Action label={busy ? "PLEASE WAIT..." : mode === "login" ? "SIGN IN" : "CREATE ACCOUNT"} onPress={submitAuth}/>
