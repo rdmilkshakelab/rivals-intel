@@ -11,7 +11,7 @@ android {
         targetSdk = 28
         versionCode = 1
         versionName = "0.1.0"
-        buildConfigField("String", "API_BASE_URL", "\"https://YOUR-RIVALS-INTEL-API.example.com\"")
+        buildConfigField("String", "API_BASE_URL", "\"${System.getenv("RI_API_BASE_URL") ?: "https://YOUR-RIVALS-INTEL-API.example.com"}\"")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
