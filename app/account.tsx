@@ -80,7 +80,7 @@ export default function AccountScreen() {
   if (!user) {
     return (
       <SafeAreaView style={styles.safe}>
-      <WebNav />
+        <WebNav />
         <ScrollView contentContainerStyle={styles.content}>
           <Pressable onPress={() => router.back()}><Text style={styles.back}>‹ BACK</Text></Pressable>
           <Text style={styles.eyebrow}>RIVALS INTEL ACCOUNT</Text>
@@ -104,6 +104,7 @@ export default function AccountScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <WebNav />
       <ScrollView contentContainerStyle={styles.content}>
         <Pressable onPress={() => router.back()}><Text style={styles.back}>‹ DASHBOARD</Text></Pressable>
         <Text style={styles.eyebrow}>ACCOUNT SETTINGS</Text>
