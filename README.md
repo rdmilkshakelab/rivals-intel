@@ -28,7 +28,7 @@ npm install
 npx expo start
 ~~~
 
-Use Expo Go to scan the QR code, or press w to run the web preview. For a production-style static web export, run `npm run build:web`; the finished site is written to `dist/`. The dashboard uses sample data until a backend URL is configured.
+Use Expo Go to scan the QR code, or press w to run the web preview. The web app is automatically built and deployed to GitHub Pages whenever web source files change. Once Pages is enabled for the repository, visit https://rdmilkshakelab.github.io/rivals-intel/. For a local static export, run `npm run build:web`; the finished site is written to `dist/`. The dashboard uses sample data until a backend URL is configured.
 
 ## Run the API
 
@@ -89,7 +89,8 @@ Rivals Intel is planned as one ecosystem across iPhone, iPad, Dynamic Island, Go
 - [ ] Complete production security review and deployment
 - [ ] Validate real player profiles and match history
 - [x] Responsive web dashboard foundation and static web export workflow
-- [ ] Deploy web build to a public hosting provider and configure the API origin
+- [x] GitHub Pages deployment workflow
+- [ ] Configure the production API origin and verify account sign-in on the hosted site
 - [ ] Overwolf Windows companion prototype, subject to current policy review
 - [ ] iOS Live Activity / Dynamic Island prototype using permitted data only
 - [ ] Google TV remote-first app build
