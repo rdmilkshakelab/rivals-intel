@@ -1,0 +1,39 @@
+name: Build Rivals Intel iPhone
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "src/**"
+      - "package.json"
+      - "app.json"
+      - ".github/workflows/ios-build.yml"
+jobs:
+  ios-simulator:
+    name: Build iOS simulator app
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install JavaScript dependencies
+        run: npm install
+      - name: Generate native iOS project
+        run: npx expo prebuild --platform ios --clean
+      - name: Build for iPhone simulator
+        shell: bash
+        run: |
+          WORKSPACE="$(find ios -maxdepth 1 -name '*.xcworkspace' -print -quit)"
+          test -n "$WORKSPACE"
+          SCHEME="$(xcodebuild -list -json -workspace "$WORKSPACE" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);const a=j.workspace?.schemes||j.project?.schemes||[];if(!a.length)process.exit(1);process.stdout.write(a[0]);})')"
+          xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Release -sdk iphonesimulator -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+          APP="$(find build/Build/Products/Release-iphonesimulator -maxdepth 1 -name '*.app' -print -quit)"
+          test -n "$APP"
+          ditto -c -k --sequesterRsrc --keepParent "$APP" Rivals-Intel-iPhone-Simulator.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rivals-intel-iphone-simulator
+          path: Rivals-Intel-iPhone-Simulator.zip
+          if-no-files-found: error
