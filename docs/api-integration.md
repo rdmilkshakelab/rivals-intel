@@ -1,21 +1,41 @@
-# Stats API integration
+# Stats provider integration
 
-The app's server proxy calls the unofficial MarvelRivalsAPI service. API keys are held only by the server in `server/.env`.
+Rivals Intel uses a provider adapter in `server/stats-provider.js`. The selected source is controlled by `STATS_PROVIDER`, so the frontend and app data model do not need to change when providers are switched.
 
-## Current endpoints used
+## Current temporary provider
 
-- `GET /api/v1/player/{uid-or-username}`
-- `GET /api/v1/player/{uid-or-username}/match-history`
-- `GET /api/v1/heroes`
+`STATS_PROVIDER=mrivals` is the current setting. The server uses [mrivals](https://github.com/iFraan/mrivals) to retrieve public Tracker Network profile information, lifetime overview, hero analytics, role analytics and peak rank. It does not require an official MarvelRivalsAPI key.
 
-The service requires an `x-api-key` header. UID lookup is documented as more stable than username lookup. The current mobile adapter maps the documented player response into the app's small `PlayerSummary` model. The match-history route is proxied but the mobile match-history screen still needs to be connected.
+The server caches profile responses in memory for five minutes by default (`STATS_CACHE_SECONDS`) and rate-limits profile lookups. Optional fetching settings are `MRIVALS_FLARESOLVERR_URL` and `MRIVALS_USE_CURL=true`.
 
-## Important data notes
+## Switching back to MarvelRivalsAPI
 
-- Profiles can be private or unavailable.
-- Player names are not guaranteed to resolve consistently; prefer a UID when possible.
-- The upstream API is unofficial and can change without notice.
-- Do not assume every profile field is present. Keep UI fallbacks for missing stats.
-- Do not expose the API key in the app bundle or any `EXPO_PUBLIC_*` variable.
+When MarvelRivalsAPI is available again:
 
-Reference: https://docs.marvelrivalsapi.com/player-stats-19312751e0
+1. Set `STATS_PROVIDER=marvelrivalsapi` in the API host environment.
+2. Restore the server-only `MARVEL_RIVALS_API_KEY` secret.
+3. Restart/redeploy the API.
+
+No frontend code or saved player data needs to be migrated. The adapter supports both provider response shapes.
+
+## Current feature differences
+
+| Feature | mrivals | MarvelRivalsAPI |
+|---|---|---|
+| Player profile and MMR | Yes | Yes |
+| Lifetime overview | Yes | Yes |
+| Hero analytics | Yes | Yes |
+| Role analytics | Yes | Provider response |
+| Peak rank | Yes | Provider response |
+| Match history | Not exposed by the library | Supported endpoint |
+| Global hero catalogue | Not exposed by the library | Supported endpoint |
+
+While mrivals is active, match-history and global hero-catalogue endpoints return HTTP 501 rather than fake or sample results.
+
+## Reliability, licensing and responsible use
+
+mrivals is a community-maintained scraper/wrapper for public Tracker Network endpoints, not an official Tracker Network API. Public endpoints can change, throttle requests or become unavailable. Use caching and avoid frequent polling.
+
+The mrivals repository currently declares GPL-3.0. Its README says production/commercial users should contact TRNetwork. Review the licence and Tracker Network terms before public or commercial distribution.
+
+References: https://github.com/iFraan/mrivals and https://docs.marvelrivalsapi.com/
