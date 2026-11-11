@@ -69,6 +69,10 @@ See [docs/accounts-and-device-auth.md](docs/accounts-and-device-auth.md) for con
 
 The active stats source is configured with `STATS_PROVIDER` in `server/.env`. See [docs/api-integration.md](docs/api-integration.md) for switching providers and feature differences. The MarvelRivalsAPI key is required only when that provider is selected.
 
+## macOS desktop build
+
+A macOS desktop wrapper is included under `apps/macos`. It loads the hosted Rivals Intel web application and uses the shared API. Run `Build Rivals Intel macOS` in GitHub Actions to create universal Apple Silicon/Intel DMG and ZIP artifacts. The first build is unsigned and requires internet access; see [docs/macos.md](docs/macos.md) for local builds and signing/notarization requirements.
+
 ## Windows desktop build
 
 A Windows desktop shell is included under `apps/windows`. It opens the hosted Rivals Intel web application in a secured Electron window. The `Build Rivals Intel Windows` workflow creates a Windows installer when files in `apps/windows` change. The installer is not a live game-process reader and does not access game memory.
@@ -91,6 +95,9 @@ Rivals Intel is planned as one ecosystem across iPhone, iPad, Dynamic Island, Go
 - [x] Account, device, activation and mobile QR-scanner screens
 - [x] GitHub Actions installs dependencies, passes the app TypeScript typecheck and checks server JavaScript syntax
 - [ ] Run Expo web/native builds and verify the app in Codespaces and on a phone
+- [x] Android mobile APK build workflow (debug APK artifact; unsigned)
+- [x] iPhone simulator build workflow (simulator app artifact; physical-device distribution still needs Apple signing)
+- [x] macOS desktop wrapper and universal DMG/ZIP build workflow (unsigned)
 - [ ] Configure and test a persistent PostgreSQL instance
 - [ ] Add email verification and password reset
 - [x] Device renaming
