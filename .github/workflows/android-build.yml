@@ -17,6 +17,8 @@ jobs:
   mobile:
     name: Build mobile Android APK
     runs-on: ubuntu-latest
+    env:
+      EXPO_PUBLIC_API_BASE_URL: https://rivals-intel-api.onrender.com
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
