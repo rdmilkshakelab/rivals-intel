@@ -1,0 +1,35 @@
+name: Build Rivals Intel macOS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "apps/macos/**"
+      - "app/**"
+      - "src/**"
+      - ".github/workflows/macos-build.yml"
+
+jobs:
+  macos:
+    name: Build universal macOS app
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install desktop dependencies
+        working-directory: apps/macos
+        run: npm install
+      - name: Package macOS app
+        working-directory: apps/macos
+        run: npm run dist
+      - name: Upload macOS installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: rivals-intel-macos
+          path: |
+            apps/macos/dist/*.dmg
+            apps/macos/dist/*.zip
+          if-no-files-found: error
