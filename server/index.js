@@ -5,7 +5,7 @@ import rateLimit from "express-rate-limit";
 import { initialiseAuth, registerAuthRoutes } from "./auth.js";
 import { getStatsProvider, getPlayerProfile, getPlayerMatchHistory, getHeroCatalogue } from "./stats-provider.js";
 
-const app = express();
+export const app = express();
 const port = Number(process.env.PORT || 4000);
 const profileLimiter = rateLimit({ windowMs: 60 * 1000, limit: 12, standardHeaders: "draft-7", legacyHeaders: false });
 const allowedOrigins = (process.env.ALLOWED_ORIGIN || "").split(",").map((value) => value.trim()).filter(Boolean);
@@ -145,7 +145,10 @@ app.get("/api/heroes", async (_req, res) => {
 registerAuthRoutes(app);
 app.use((error, _req, res, _next) => {
   console.error("Rivals Intel API error:", error.message);
-  res.status(error.status || 500).json({ error: error.status && error.status < 500 ? error.message : "An unexpected server error occurred." });
+  const isCorsError = error.message === "This origin is not allowed by Rivals Intel.";
+  res.status(isCorsError ? 403 : (error.status || 500)).json({
+    error: isCorsError ? "This origin is not allowed." : error.status && error.status < 500 ? error.message : "An unexpected server error occurred."
+  });
 });
 
 async function start() {
@@ -158,7 +161,9 @@ async function start() {
   console.log("Rivals Intel stats provider: " + getStatsProvider());
   app.listen(port, "0.0.0.0", () => console.log("Rivals Intel API listening on http://localhost:" + port));
 }
-start().catch((error) => {
-  console.error("Could not start Rivals Intel API:", error.message);
-  process.exit(1);
-});
+if (process.env.NODE_ENV !== "test") {
+  start().catch((error) => {
+    console.error("Could not start Rivals Intel API:", error.message);
+    process.exit(1);
+  });
+}
