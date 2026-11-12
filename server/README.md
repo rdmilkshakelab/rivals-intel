@@ -58,6 +58,7 @@ See [`.env.example`](.env.example). Important settings:
 - `DATABASE_SSL` — set to `true` when the database host requires TLS.
 - `AUTH_ENCRYPTION_KEY` — base64-encoded 32-byte key for encrypted authenticator secrets.
 - `PUBLIC_WEB_URL` — public web origin used for device activation.
+- `PUBLIC_REGISTRATION_ENABLED` — keep `false` until email verification and password recovery are implemented.
 - `PUBLIC_API_URL` — public API origin used in the OpenAPI document.
 
 Never commit `.env`, database credentials, API keys or encryption keys. Never expose secrets through `EXPO_PUBLIC_*` variables.
