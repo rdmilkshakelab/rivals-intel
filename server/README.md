@@ -52,7 +52,8 @@ A provider may return HTTP 501 when a feature is not available. The API delibera
 See [`.env.example`](.env.example). Important settings:
 
 - `STATS_PROVIDER` — `mrivals` or `marvelrivalsapi`.
-- `STATS_CACHE_SECONDS` — profile cache lifetime; defaults to 300 seconds (minimum 30 seconds).\n- `STATS_PROFILE_TIMEOUT_MS` — maximum wait for a Tracker Network profile response; defaults to 15 seconds.
+- `STATS_CACHE_SECONDS` — profile cache lifetime; defaults to 300 seconds (minimum 30 seconds).
+- `STATS_PROFILE_TIMEOUT_MS` — maximum wait for a Tracker Network profile response; defaults to 15 seconds.
 - `ALLOWED_ORIGIN` — comma-separated exact client origins.
 - `DATABASE_URL` — persistent PostgreSQL connection for accounts and device pairing.
 - `DATABASE_SSL` — set to `true` when the database host requires TLS.
