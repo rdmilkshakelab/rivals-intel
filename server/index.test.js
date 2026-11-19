@@ -70,3 +70,85 @@ test("unapproved browser origins receive a clear forbidden response", async () =
   assert.equal(response.status, 403);
   assert.deepEqual(await response.json(), { error: "This origin is not allowed." });
 });
+
+
+test("stats service caches successful player profiles", async () => {
+  const { createStatsService } = await import("./stats-provider.js");
+  let calls = 0;
+  const service = createStatsService({
+    providerName: "mrivals",
+    env: { STATS_CACHE_SECONDS: "300" },
+    mrivalsClient: {
+      async fetchUser(username) {
+        calls += 1;
+        return {
+          info: () => ({ name: username }),
+          overview: () => ({ matchesPlayed: 10 }),
+          heroes: () => ({})
+        };
+      }
+    }
+  });
+
+  const first = await service.getPlayerProfile("TestPlayer");
+  const second = await service.getPlayerProfile("testplayer");
+  assert.equal(first.cached, false);
+  assert.equal(second.cached, true);
+  assert.equal(calls, 1);
+  assert.equal(second.info.name, "TestPlayer");
+});
+
+test("stats service coalesces simultaneous requests for the same player", async () => {
+  const { createStatsService } = await import("./stats-provider.js");
+  let calls = 0;
+  const service = createStatsService({
+    providerName: "mrivals",
+    env: { STATS_CACHE_SECONDS: "300" },
+    mrivalsClient: {
+      async fetchUser(username) {
+        calls += 1;
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        return {
+          info: () => ({ name: username }),
+          overview: () => ({ matchesPlayed: 3 }),
+          heroes: () => ({})
+        };
+      }
+    }
+  });
+
+  const [first, second] = await Promise.all([
+    service.getPlayerProfile("ConcurrentPlayer"),
+    service.getPlayerProfile("ConcurrentPlayer")
+  ]);
+  assert.equal(calls, 1);
+  assert.equal(first.info.name, "ConcurrentPlayer");
+  assert.equal(second.info.name, "ConcurrentPlayer");
+});
+
+test("stats service maps missing profiles to a safe 404 provider error", async () => {
+  const { createStatsService } = await import("./stats-provider.js");
+  const service = createStatsService({
+    providerName: "mrivals",
+    env: {},
+    mrivalsClient: {
+      async fetchUser() {
+        throw new Error("User not found (404)");
+      }
+    }
+  });
+
+  await assert.rejects(
+    service.getPlayerProfile("MissingPlayer"),
+    (error) => error.status === 404 && /not found/i.test(error.message)
+  );
+});
+
+test("stats service reports unsupported match history explicitly", async () => {
+  const { createStatsService } = await import("./stats-provider.js");
+  const service = createStatsService({ providerName: "mrivals", env: {} });
+  await assert.rejects(
+    service.getPlayerMatchHistory("TestPlayer"),
+    (error) => error.status === 501
+  );
+});
