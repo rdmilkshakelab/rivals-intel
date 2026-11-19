@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "NODE_ENV=test node --test"
   },
   "dependencies": {
     "cors": "^2.8.5",

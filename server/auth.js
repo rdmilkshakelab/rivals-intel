@@ -155,6 +155,9 @@ async function createSession(userId, req, res, suppliedName) {
 
 export function registerAuthRoutes(app) {
   app.post("/api/auth/register", async (req, res, next) => {
+    if (process.env.PUBLIC_REGISTRATION_ENABLED !== "true") {
+      return res.status(403).json({ error: "Account registration is temporarily unavailable." });
+    }
     try {
       const email = emailNormal(req.body.email);
       const username = String(req.body.username || "").trim();
